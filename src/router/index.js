@@ -13,7 +13,7 @@ const router = createRouter({
       children: [
         {
           path: '/',
-          component: () => import('@/views/home/TheHome.vue'),
+          component: () => import('@/views/home/web/TheHome.vue'),
           meta: {
             requiresAuth: true,
             roles: ['admin', 'staff', 'viewer']
@@ -33,6 +33,15 @@ const router = createRouter({
         {
           path: '/admin',
           component: () => import('@/views/admin/TheAdmin.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['admin', 'staff']
+          },
+          beforeEnter: auth.authMiddleware
+        },
+        {
+          path: '/control',
+          component: () => import('@/views/control/TheControl.vue'),
           meta: {
             requiresAuth: true,
             roles: ['admin']
@@ -56,6 +65,10 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/views/pages/ThePage404.vue')
+    },
+    {
+      path: '/queue/:idroom',
+      component: () => import('@/views/home/queue/QueueRoom.vue')
     }
   ]
 })

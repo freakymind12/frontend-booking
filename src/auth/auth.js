@@ -9,7 +9,7 @@ const checkRoles = async () => {
     const token = Cookies.get('jwt_token')
     // Lakukan request ke backend untuk verifikasi token
     const response = await axios.post(
-      'http://localhost:5151/auth/validate',
+      'http://192.168.148.125:5151/auth/validate',
       {},
       {
         headers: {
@@ -39,7 +39,7 @@ const authMiddleware = async (to, from, next) => {
 
       // Lakukan request ke backend untuk verifikasi token
       const response = await axios.post(
-        'http://localhost:5151/auth/validate',
+        'http://192.168.148.125:5151/auth/validate',
         {}, //body
         {
           headers: {

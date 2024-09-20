@@ -10,8 +10,11 @@
       <a-menu-item key="booking">
         <RouterLink to="/booking">Booking</RouterLink>
       </a-menu-item>
-      <a-menu-item key="admin" v-if="user.role == 'admin'">
+      <a-menu-item key="admin" v-if="user.role == 'admin' || user.role == 'staff'">
         <RouterLink to="/admin">Admin</RouterLink>
+      </a-menu-item>
+      <a-menu-item key="control" v-if="user.role == 'admin'">
+        <RouterLink to="/control">Control</RouterLink>
       </a-menu-item>
       <a-dropdown>
         <a-menu-item>

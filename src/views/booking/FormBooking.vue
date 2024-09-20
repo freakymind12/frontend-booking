@@ -2,60 +2,150 @@
   <a-col :span="5">
     <a-card class="booking-card">
       <h2>Fill this form to booking</h2>
-      <a-form layout="vertical" :model="form" @finish="handleBooking()">
+      <a-form layout="vertical" :model="form" @finish="handleBooking">
         <a-form-item label="Room" name="id_room" :rules="[{ required: true }]">
-          <a-input placeholder="Room" v-model:value="form.id_room" />
+          <a-select v-model:value="form.id_room" placeholder="Room">
+            <a-select-option v-for="room in rooms" :key="room.id_room" :value="room.id_room">{{
+              room.room_name
+            }}</a-select-option>
+          </a-select>
         </a-form-item>
         <a-form-item label="Meeting Name" name="meeting_name" :rules="[{ required: true }]">
           <a-input placeholder="Meeting Name" v-model:value="form.meeting_name" />
         </a-form-item>
         <a-form-item label="Start & End Time" name="time" :rules="[{ required: true }]">
           <a-range-picker
-            :show-time="{ format: 'HH:mm' }"
-            format="YYYY-MM-DD HH:mm"
+            show-time
+            format="YYYY-MM-DD HH:mm:ss"
             :placeholder="['Start Time', 'End Time']"
-            @change="onRangeChange"
             v-model:value="form.time"
           />
         </a-form-item>
         <a-form-item>
-          <a-space size="large">
-            <a-button
-              @click="handleReset"
-              :disabled="form.id_room == '' || form.meeting_name == '' || form.time.length === 0"
-              >Reset</a-button
-            >
-            <a-button
-              type="primary"
-              html-type="submit"
-              :disabled="form.id_room == '' || form.meeting_name == '' || form.time.length === 0"
-            >
-              Submit
-            </a-button>
-          </a-space>
+          <a-flex justify="flex-end">
+            <a-space :size="10">
+              <a-button
+                @click="handleReset"
+                :disabled="
+                  form.id_room === '' || form.meeting_name === '' || form.time.length === 0
+                "
+                >Reset</a-button
+              >
+              <a-button
+                type="primary"
+                html-type="submit"
+                :disabled="
+                  form.id_room === '' ||
+                  form.meeting_name === '' ||
+                  form.time.length === 0 ||
+                  validationResponse.data.booking.length > 0
+                "
+              >
+                Submit
+              </a-button>
+            </a-space>
+          </a-flex>
         </a-form-item>
       </a-form>
+      <p
+        style="font-style: italic; font-weight: 500; color: red"
+        v-if="validationResponse.data.booking.length > 0"
+      >
+        {{ validationResponse.message }}
+      </p>
+      <p
+        style="font-style: italic; font-weight: 500; color: green"
+        v-if="validationResponse.data.booking.length == 0 && validationResponse.message"
+      >
+        {{ validationResponse.message }}
+      </p>
+      <a-timeline class="clash-list" v-if="validationResponse.data.booking.length > 0">
+        <a-timeline-item
+          color="red"
+          v-for="book in validationResponse.data.booking"
+          :key="book.id_booking"
+        >
+          <a-tag color="green">
+            <template #icon><form-outlined /></template>
+            {{ book.meeting_name }}
+          </a-tag>
+          <a-tag color="red">
+            <template #icon><user-outlined /></template>
+            {{ book.username }}
+          </a-tag>
+          <a-tag color="pink">
+            <template #icon> <bank-outlined /></template>
+            {{ book.dept }}</a-tag
+          >
+        </a-timeline-item>
+      </a-timeline>
     </a-card>
   </a-col>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import axios from 'axios'
+import { onMounted, ref, watch } from 'vue'
+import auth from '@/auth/auth'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+import { UserOutlined, BankOutlined, FormOutlined } from '@ant-design/icons-vue'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const form = ref({
   meeting_name: '',
   id_room: '',
   time: []
 })
+const rooms = ref()
+const user = ref()
+const emits = defineEmits(['add-bookings'])
+const validationResponse = ref({
+  data: {
+    booking: []
+  },
+  message: ''
+})
 
-const onRangeChange = (value, dateString) => {
-  form.value.time = dateString
-  console.log('Selected Time: ', value)
-  console.log('Formatted Selected Time: ', dateString)
+const getUserData = async () => {
+  try {
+    user.value = await auth.checkRoles()
+  } catch (error) {
+    console.error(error)
+  }
 }
 
-const handleBooking = () => {
-  console.log(form.value)
+const getRoomData = async () => {
+  try {
+    const response = await axios.get('http://192.168.148.125:5151/rooms')
+    rooms.value = response.data.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const convertUtcTimesToLocal = (utcTimes) => {
+  return utcTimes.map((time) => dayjs(time).utc().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss'))
+}
+
+const handleBooking = async () => {
+  try {
+    const [startTime, endTime] = convertUtcTimesToLocal(form.value.time)
+    await axios.post('http://192.168.148.125:5151/bookings', {
+      id_room: form.value.id_room,
+      meeting_name: form.value.meeting_name,
+      id_user: user.value.id,
+      start: startTime,
+      end: endTime
+    })
+    emits('add-bookings')
+    handleReset()
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 const handleReset = () => {
@@ -64,17 +154,83 @@ const handleReset = () => {
     id_room: '',
     time: []
   }
+  validationResponse.value = {
+    data: {
+      booking: []
+    },
+    message: ''
+  }
 }
+
+const checkBooking = async (room, time) => {
+  try {
+    const [startTime, endTime] = convertUtcTimesToLocal(time)
+    const response = await axios.get(
+      `http://192.168.148.125:5151/bookings/check?id_room=${room}&start=${startTime}&end=${endTime}`
+    )
+    validationResponse.value = response.data
+    console.log(validationResponse.value)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+watch(
+  () => form.value.id_room,
+  (newRoom) => {
+    if (newRoom && form.value.time.length === 2) {
+      checkBooking(newRoom, form.value.time)
+    }
+  }
+)
+
+watch(
+  () => form.value.time,
+  (newTime) => {
+    if (form.value.id_room && newTime.length === 2) {
+      checkBooking(form.value.id_room, newTime)
+    }
+  }
+)
+
+onMounted(() => {
+  getUserData()
+  getRoomData()
+})
 </script>
 
 <style scoped>
 .booking-card {
-  height: 600px; /* Tetapkan tinggi tetap */
-  overflow-y: auto; /* Tambahkan scroll secara vertikal */
+  height: 600px;
+  overflow-y: auto;
   padding-right: 8px;
+  border: solid #264d8e 1px;
 }
 
 .booking-card::-webkit-scrollbar {
-  display: none; /* Menyembunyikan scrollbar */
+  display: none;
+}
+
+.clash-list {
+  height: 150px;
+  overflow: auto;
+  padding: 2%;
+}
+
+.clash-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.clash-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.clash-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.clash-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 </style>

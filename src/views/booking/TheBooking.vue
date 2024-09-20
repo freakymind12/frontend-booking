@@ -4,18 +4,38 @@
     <p>See available room bellow, and make your booking room</p>
   </div>
   <div class="wrapper">
-    <a-row :gutter="16">
-      <FormBooking />
-      <RoomList />
-      <BookingList />
-    </a-row>
+    <a-flex justify="space-around" align="center" wrap="wrap">
+      <FormBooking @add-bookings="handleAdd" />
+      <RoomList @select-room="handleSelectRoom" />
+      <RoomSchedule :room="selectedRoom" :refreshKey="refreshKey" />
+      <BookingList :refreshKey="refreshKey" @delete-booking="handleDelete" />
+    </a-flex>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import BookingList from './BookingList.vue'
 import FormBooking from './FormBooking.vue'
 import RoomList from './RoomList.vue'
+import RoomSchedule from './RoomSchedule.vue'
+import { message } from 'ant-design-vue'
+
+const refreshKey = ref(0)
+const selectedRoom = ref('')
+
+const handleDelete = () => {
+  refreshKey.value++
+  message.success('Delete booking data success')
+}
+const handleAdd = () => {
+  refreshKey.value++
+  message.success('Add booking data success')
+}
+
+const handleSelectRoom = (room) => {
+  selectedRoom.value = room
+}
 </script>
 
 <style scoped>
