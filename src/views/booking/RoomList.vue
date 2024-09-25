@@ -1,5 +1,7 @@
 <template>
-  <a-col :span="6">
+  <!-- <a-col :span="6"> -->
+  <div class="wrapper-room-list">
+    <h2>Room List</h2>
     <a-row gutter="24" class="scrollable-column">
       <a-col :span="24" v-if="rooms.length === 0">
         <a-card class="empty-card">
@@ -19,7 +21,8 @@
         </a-card>
       </a-col>
     </a-row>
-  </a-col>
+    <!-- </a-col> -->
+  </div>
 </template>
 
 <script setup>
@@ -56,17 +59,12 @@ onMounted(() => {
   border: solid #264d8e 1px;
 }
 
-.room-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  transform: scale(1.02);
-}
-
 .room-card p {
   margin: 0;
 }
 
 .scrollable-column {
-  height: 600px;
+  height: 520px;
   overflow: auto; /* Mengizinkan scroll */
   scrollbar-width: none; /* Firefox */
 }
@@ -82,5 +80,13 @@ onMounted(() => {
   align-items: center;
   height: 100%; /* Sesuaikan height card dengan parent */
   min-height: 600px; /* Sama dengan tinggi scrollable-column */
+}
+
+.wrapper-room-list {
+  max-width: 400px;
+  padding: 20px;
+  border: 1px solid #264d8e;
+  border-radius: 10px;
+  height: 600px;
 }
 </style>

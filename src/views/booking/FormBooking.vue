@@ -1,86 +1,86 @@
 <template>
-  <a-col :span="5">
-    <a-card class="booking-card">
-      <h2>Fill this form to booking</h2>
-      <a-form layout="vertical" :model="form" @finish="handleBooking">
-        <a-form-item label="Room" name="id_room" :rules="[{ required: true }]">
-          <a-select v-model:value="form.id_room" placeholder="Room">
-            <a-select-option v-for="room in rooms" :key="room.id_room" :value="room.id_room">{{
-              room.room_name
-            }}</a-select-option>
-          </a-select>
-        </a-form-item>
-        <a-form-item label="Meeting Name" name="meeting_name" :rules="[{ required: true }]">
-          <a-input placeholder="Meeting Name" v-model:value="form.meeting_name" />
-        </a-form-item>
-        <a-form-item label="Start & End Time" name="time" :rules="[{ required: true }]">
-          <a-range-picker
-            show-time
-            format="YYYY-MM-DD HH:mm:ss"
-            :placeholder="['Start Time', 'End Time']"
-            v-model:value="form.time"
-          />
-        </a-form-item>
-        <a-form-item>
-          <a-flex justify="flex-end">
-            <a-space :size="10">
-              <a-button
-                @click="handleReset"
-                :disabled="
-                  form.id_room === '' || form.meeting_name === '' || form.time.length === 0
-                "
-                >Reset</a-button
-              >
-              <a-button
-                type="primary"
-                html-type="submit"
-                :disabled="
-                  form.id_room === '' ||
-                  form.meeting_name === '' ||
-                  form.time.length === 0 ||
-                  validationResponse.data.booking.length > 0
-                "
-              >
-                Submit
-              </a-button>
-            </a-space>
-          </a-flex>
-        </a-form-item>
-      </a-form>
-      <p
-        style="font-style: italic; font-weight: 500; color: red"
-        v-if="validationResponse.data.booking.length > 0"
+  <!-- <a-col :span="5"> -->
+  <!-- <div class="wrapper-form-booking"> -->
+  <a-card class="booking-card">
+    <h2>Fill this form to booking</h2>
+    <a-form layout="vertical" :model="form" @finish="handleBooking">
+      <a-form-item label="Room" name="id_room" :rules="[{ required: true }]">
+        <a-select v-model:value="form.id_room" placeholder="Room">
+          <a-select-option v-for="room in rooms" :key="room.id_room" :value="room.id_room">{{
+            room.room_name
+          }}</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="Meeting Name" name="meeting_name" :rules="[{ required: true }]">
+        <a-input placeholder="Meeting Name" v-model:value="form.meeting_name" />
+      </a-form-item>
+      <a-form-item label="Start & End Time" name="time" :rules="[{ required: true }]">
+        <a-range-picker
+          show-time
+          format="YYYY-MM-DD HH:mm:ss"
+          :placeholder="['Start Time', 'End Time']"
+          v-model:value="form.time"
+        />
+      </a-form-item>
+      <a-form-item>
+        <a-flex justify="flex-end">
+          <a-space :size="10">
+            <a-button
+              @click="handleReset"
+              :disabled="form.id_room === '' || form.meeting_name === '' || form.time.length === 0"
+              >Reset</a-button
+            >
+            <a-button
+              type="primary"
+              html-type="submit"
+              :disabled="
+                form.id_room === '' ||
+                form.meeting_name === '' ||
+                form.time.length === 0 ||
+                validationResponse.data.booking.length > 0
+              "
+            >
+              Submit
+            </a-button>
+          </a-space>
+        </a-flex>
+      </a-form-item>
+    </a-form>
+    <p
+      style="font-style: italic; font-weight: 500; color: red"
+      v-if="validationResponse.data.booking.length > 0"
+    >
+      {{ validationResponse.message }}
+    </p>
+    <p
+      style="font-style: italic; font-weight: 500; color: green"
+      v-if="validationResponse.data.booking.length == 0 && validationResponse.message"
+    >
+      {{ validationResponse.message }}
+    </p>
+    <a-timeline class="clash-list" v-if="validationResponse.data.booking.length > 0">
+      <a-timeline-item
+        color="red"
+        v-for="book in validationResponse.data.booking"
+        :key="book.id_booking"
       >
-        {{ validationResponse.message }}
-      </p>
-      <p
-        style="font-style: italic; font-weight: 500; color: green"
-        v-if="validationResponse.data.booking.length == 0 && validationResponse.message"
-      >
-        {{ validationResponse.message }}
-      </p>
-      <a-timeline class="clash-list" v-if="validationResponse.data.booking.length > 0">
-        <a-timeline-item
-          color="red"
-          v-for="book in validationResponse.data.booking"
-          :key="book.id_booking"
+        <a-tag color="green">
+          <template #icon><form-outlined /></template>
+          {{ book.meeting_name }}
+        </a-tag>
+        <a-tag color="red">
+          <template #icon><user-outlined /></template>
+          {{ book.username }}
+        </a-tag>
+        <a-tag color="pink">
+          <template #icon> <bank-outlined /></template>
+          {{ book.dept }}</a-tag
         >
-          <a-tag color="green">
-            <template #icon><form-outlined /></template>
-            {{ book.meeting_name }}
-          </a-tag>
-          <a-tag color="red">
-            <template #icon><user-outlined /></template>
-            {{ book.username }}
-          </a-tag>
-          <a-tag color="pink">
-            <template #icon> <bank-outlined /></template>
-            {{ book.dept }}</a-tag
-          >
-        </a-timeline-item>
-      </a-timeline>
-    </a-card>
-  </a-col>
+      </a-timeline-item>
+    </a-timeline>
+  </a-card>
+  <!-- </a-col> -->
+  <!-- </div> -->
 </template>
 
 <script setup>
@@ -205,6 +205,7 @@ onMounted(() => {
   overflow-y: auto;
   padding-right: 8px;
   border: solid #264d8e 1px;
+  max-width: 400px;
 }
 
 .booking-card::-webkit-scrollbar {

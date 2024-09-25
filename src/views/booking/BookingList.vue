@@ -138,7 +138,7 @@ onMounted(async () => {
   overflow-y: auto;
   padding-right: 8px;
   text-align: left;
-  width: 450px;
+  width: 400px;
   border: solid #264d8e 1px;
 }
 

@@ -25,7 +25,6 @@
               <BankOutlined />
             </template>
           </a-tag>
-
           <a-dropdown>
             <a-tag
               class="role-tag"

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <a-flex justify="center" align="center" wrap="wrap" gap="small">
+    <a-flex justify="center" align="center" wrap="wrap" gap="large">
       <div class="room-info">
         <a-card class="card-room-info">
           <a-flex justify="center" align="center" gap="middle" style="margin-bottom: 1rem">
@@ -11,7 +11,7 @@
             </h2>
           </a-flex>
           <a-dropdown>
-            <h2 class="room-name">{{ roomData?.room_name }}</h2>
+            <h3 class="room-name">{{ roomData?.room_name }}</h3>
             <template #overlay>
               <a-menu>
                 <a-menu-item
@@ -63,35 +63,45 @@
         </a-card>
       </div>
 
-      <div class="list">
-        <a-card class="card-list" v-for="booking in bookings" :key="booking.id_booking">
-          <a-flex gap="small" wrap="wrap">
-            <a-tag color="red"
-              ><template #icon> <UserOutlined /> </template>{{ booking.username }}</a-tag
-            >
-            <a-tag color="cyan">
-              <template #icon> <clock-circle-outlined /> </template
-              >{{ calculateDuration(booking.start, booking.end) }} min</a-tag
-            >
-            <a-tag color="green">
-              <template #icon> <FormOutlined /> </template>{{ booking.meeting_name }}</a-tag
-            >
-            <a-tag color="#108ee9"> Start : {{ booking.start.split('T')[0] }} </a-tag>
-            <a-tag color="#108ee9">End : {{ booking.end.split('T')[0] }}</a-tag>
-            <a-tag color="blue" v-if="isPassed(booking)"
-              ><template #icon>
-                <CheckCircleOutlined />
-              </template>
-              Finished
-            </a-tag>
-          </a-flex>
-        </a-card>
+      <div class="wrapper-booking-list">
+        <a-flex justify="center" align="center" gap="middle" style="margin-bottom: 1rem">
+          <h2 :class="{ 'logo-name': true, 'intro-active': isActive }">
+            <CarryOutOutlined style="color: #264d8e" /> Today's Schedule
+          </h2>
+        </a-flex>
+        <div class="list">
+          <a-card class="card-list" v-for="booking in bookings" :key="booking.id_booking" hoverable>
+            <a-flex gap="small" wrap="wrap" vertical style="margin-bottom: 0.5rem">
+              <a-tag color="red"
+                ><template #icon> <UserOutlined /> </template>{{ booking.username }}</a-tag
+              >
+              <a-tag color="green">
+                <template #icon> <FormOutlined /> </template>{{ booking.meeting_name }}</a-tag
+              >
+            </a-flex>
+            <a-flex wrap="wrap">
+              <a-tag color="#8967B3">
+                <template #icon>
+                  <ClockCircleOutlined />
+                </template>
+                {{ booking.start.split(' ')[1].slice(0, 5) }} -
+                {{ booking.end.split(' ')[1].slice(0, 5) }}</a-tag
+              >
+              <a-tag color="blue" v-if="isPassed(booking)"
+                ><template #icon>
+                  <CheckCircleOutlined />
+                </template>
+                Finished
+              </a-tag>
+            </a-flex>
+          </a-card>
+          <a-card class="empty-list" v-if="bookings.length === 0">
+            <a-empty>
+              <template #description> No Bookings List </template>
+            </a-empty>
+          </a-card>
+        </div>
       </div>
-      <a-card class="empty-list" v-if="bookings.length === 0">
-        <a-empty style="width: 210px">
-          <template #description> No Bookings List </template>
-        </a-empty>
-      </a-card>
     </a-flex>
   </div>
 </template>
@@ -101,13 +111,15 @@ import axios from 'axios'
 import { onMounted, ref, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  ClockCircleOutlined,
+  // ClockCircleOutlined,
   FormOutlined,
   UserOutlined,
   BankOutlined,
   LoadingOutlined,
   ForwardOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CarryOutOutlined
 } from '@ant-design/icons-vue'
 import hrs from '@/assets/hrs.png'
 
@@ -155,13 +167,6 @@ const isPassed = (booking) => {
   const now = new Date()
   const end = new Date(booking.end)
   return now > end
-}
-
-const calculateDuration = (startDateTime, endDateTime) => {
-  const start = new Date(startDateTime)
-  const end = new Date(endDateTime)
-  const differenceInMinutes = Math.round((end - start) / (1000 * 60)).toLocaleString()
-  return differenceInMinutes
 }
 
 const fetchBookingList = async (room) => {
@@ -287,44 +292,68 @@ watch(
 }
 
 .room-info {
-  height: 410px;
+  height: 400px;
 }
 
-.list,
-.empty-list {
-  height: 410px;
-  overflow: auto;
+.list {
+  height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-width: none;
 }
 
 .list::-webkit-scrollbar {
-  display: none;
+  width: 8px;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.wrapper-booking-list {
+  max-width: 400px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-list {
+  height: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .card-list {
-  width: 300px;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-list:hover {
+  border-color: #264d8e;
 }
 
 .card-room-info {
-  width: 500px;
-  height: inherit;
+  max-width: 400px;
+  max-height: 100%;
 }
 
 .ant-card {
   border: 1px solid #264d8e;
 }
 
-.empty-list {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .logo-name {
   margin-bottom: 0px;
-  font-family: monospace;
-  font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
   opacity: 0; /* Start with hidden */
   transform: scale(0.8); /* Mulai dengan ukuran lebih kecil */
   transition:
@@ -339,6 +368,13 @@ watch(
 
 .room-name:hover {
   cursor: pointer;
-  color: #264d8e;
+  background-color: #264d8e;
+}
+
+.room-name {
+  text-align: center;
+  border-radius: 30px;
+  color: white;
+  background-color: #264d8e;
 }
 </style>

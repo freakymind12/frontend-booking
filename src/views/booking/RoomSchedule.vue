@@ -2,8 +2,8 @@
   <!-- <a-col :span="6"> -->
   <a-card class="booking-card">
     <a-flex justify="space-between">
-      <h2>Schedule {{ props.room.room_name }}</h2>
-      <a-date-picker style="height: 32px; width: 30%" v-model:value="selectedDate" />
+      <h2>{{ props.room.room_name }}</h2>
+      <a-date-picker style="height: 32px; width: 35%" v-model:value="selectedDate" />
     </a-flex>
     <a-timeline>
       <a-timeline-item v-for="item in bookingList" :key="item.id_booking">
@@ -103,7 +103,7 @@ onMounted(fetchBookingList)
   overflow-y: auto;
   padding-right: 8px;
   text-align: left;
-  width: 450px;
+  width: 400px;
   border: solid #264d8e 1px;
 }
 
