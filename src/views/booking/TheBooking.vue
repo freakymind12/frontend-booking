@@ -4,10 +4,10 @@
     <p>See available room bellow, and make your booking room</p>
   </div>
   <div class="wrapper">
-    <a-flex justify="space-evenly" align="center" wrap="wrap" gap="small">
-      <FormBooking @add-bookings="handleAdd" />
+    <a-flex justify="center" align="center" wrap="wrap" gap="middle">
       <RoomList @select-room="handleSelectRoom" />
       <RoomSchedule :room="selectedRoom" :refreshKey="refreshKey" />
+      <FormBooking @add-bookings="handleAdd" />
       <BookingList :refreshKey="refreshKey" @delete-booking="handleDelete" />
     </a-flex>
   </div>

@@ -3,11 +3,7 @@
     <a-row gutter="24" class="scrollable-column">
       <a-col :span="24" v-if="rooms.length === 0">
         <a-card class="empty-card">
-          <a-empty>
-            <template #description>
-              <p>There is no room data</p>
-            </template>
-          </a-empty>
+          <a-empty description="No Room Data" />
         </a-card>
       </a-col>
       <a-col :span="24" v-for="room in rooms" :key="room.id" style="margin-bottom: 1px">
@@ -128,6 +124,7 @@ onMounted(() => {
   align-items: center;
   height: 100%; /* Sesuaikan height card dengan parent */
   min-height: 600px; /* Sama dengan tinggi scrollable-column */
+  border: 1px solid #264d8e;
 }
 
 .edit-icon {

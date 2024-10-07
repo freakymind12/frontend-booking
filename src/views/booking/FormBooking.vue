@@ -20,6 +20,7 @@
           format="YYYY-MM-DD HH:mm:ss"
           :placeholder="['Start Time', 'End Time']"
           v-model:value="form.time"
+          :disabled-date="disabledDate"
         />
       </a-form-item>
       <a-form-item>
@@ -173,6 +174,15 @@ const checkBooking = async (room, time) => {
   } catch (error) {
     console.error(error)
   }
+}
+
+const disabledDate = (current) => {
+  const today = new Date()
+  const threeMonthsFromNow = new Date()
+  threeMonthsFromNow.setMonth(today.getMonth() + 2)
+  today.setHours(0, 0, 0, 0)
+  threeMonthsFromNow.setHours(23, 59, 59, 999)
+  return current < today || current > threeMonthsFromNow
 }
 
 watch(

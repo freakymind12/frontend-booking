@@ -3,13 +3,13 @@
     <a-flex justify="space-between" style="margin-bottom: 0.2rem">
       <h2><CarryOutOutlined style="color: #1990ff" /> Queue Room</h2>
       <a-space>
-        <a-date-picker style="width: 120px" v-model:value="selectedDate" />
         <a-select
           v-model:value="selectedRoom"
           placeholder="Select a room"
           style="width: 200px"
           :options="options"
         ></a-select>
+        <a-date-picker style="width: 120px" v-model:value="selectedDate" />
       </a-space>
     </a-flex>
     <a-flex vertical class="list-queue" :align="queueList.length == 0 ? 'center' : 'flex-start'">
@@ -23,12 +23,15 @@
           <a-tag color="green"><FormOutlined /> {{ queue.meeting_name }}</a-tag>
           <a-tag color="pink"><BankOutlined /> {{ queue.dept }}</a-tag>
           <a-tag color="#108ee9"
-            ><ClockCircleOutlined /> {{ queue.start }} to {{ queue.end }}</a-tag
+            ><ClockCircleOutlined /> {{ queue.start.split(' ')[1].slice(0, 5) }} -
+            {{ queue.end.split(' ')[1].slice(0, 5) }}</a-tag
           >
           <a-tag color="cyan">{{ calculateDuration(queue.start, queue.end) }} min</a-tag>
         </a-space>
       </a-card>
-      <a-empty v-if="queueList.length == 0" />
+      <div class="empty-list" v-if="queueList.length == 0">
+        <a-empty description="No Queue Data" />
+      </div>
     </a-flex>
   </a-card>
 </template>
@@ -145,5 +148,12 @@ onMounted(async () => {
 
 .ant-tag {
   font-size: 0.8rem;
+}
+.empty-list {
+  height: inherit;
+  display: flex;
+  width: inherit;
+  justify-content: center;
+  align-items: center;
 }
 </style>

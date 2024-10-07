@@ -4,13 +4,9 @@
     <h2>Room List</h2>
     <a-row gutter="24" class="scrollable-column">
       <a-col :span="24" v-if="rooms.length === 0">
-        <a-card class="empty-card">
-          <a-empty>
-            <template #description>
-              <p>There is no room data</p>
-            </template>
-          </a-empty>
-        </a-card>
+        <div class="empty-card">
+          <a-empty description="No Room Data" />
+        </div>
       </a-col>
       <a-col :span="24" v-for="room in rooms" :key="room.id">
         <a-card class="room-card">
@@ -21,7 +17,6 @@
         </a-card>
       </a-col>
     </a-row>
-    <!-- </a-col> -->
   </div>
 </template>
 
@@ -64,7 +59,7 @@ onMounted(() => {
 }
 
 .scrollable-column {
-  height: 520px;
+  height: 510px;
   overflow: auto; /* Mengizinkan scroll */
   scrollbar-width: none; /* Firefox */
 }
@@ -78,8 +73,8 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Sesuaikan height card dengan parent */
-  min-height: 600px; /* Sama dengan tinggi scrollable-column */
+  height: 100%;
+  width: 360px;
 }
 
 .wrapper-room-list {

@@ -53,7 +53,9 @@
             </template>
           </a-tag>
         </a-card>
-        <a-empty v-if="filteredUsers.length === 0"></a-empty>
+        <div class="empty-list">
+          <a-empty v-if="filteredUsers.length === 0"></a-empty>
+        </div>
       </a-flex>
     </a-card>
   </a-col>
@@ -181,5 +183,12 @@ onMounted(async () => {
 
 .wrapper-card {
   border: solid #264d8e 1px;
+}
+
+.empty-list {
+  height: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

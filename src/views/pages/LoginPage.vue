@@ -2,8 +2,8 @@
   <a-flex justify="center" align="center" class="register-container">
     <a-card class="register-card">
       <a-flex justify="center" align="center" gap="small" vertical>
-        <a-flex justify="center" align="center" gap="large">
-          <a-image :src="hrs" :width="100" :preview="false" />
+        <a-flex justify="center" align="center" gap="large" class="logo-img">
+          <a-image :src="hrs" :width="100" :preview="false" @click="toQueue" />
           <h2 :class="{ 'logo-name': true, 'intro-active': isActive }">
             Meeting Room<br />
             Management
@@ -90,6 +90,21 @@ const handleLogin = async () => {
 const info = () => {
   message.error(errorMessage.value)
 }
+
+const toQueue = async () => {
+  let idroom
+  try {
+    const response = await axios.get('http://192.168.148.125:5151/rooms')
+    if (response.data.data.length > 0) {
+      idroom = response.data.data[0].id_room
+      router.push(`/queue/${idroom}`)
+    } else {
+      router.push('/error')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 
 <style scoped>
@@ -135,5 +150,9 @@ const info = () => {
 .logo-name.intro-active {
   opacity: 1; /* Setelah kelas ditambahkan, elemen terlihat */
   transform: scale(1); /* Kembali ke ukuran normal */
+}
+
+.logo-img:hover {
+  cursor: pointer;
 }
 </style>

@@ -30,17 +30,17 @@
             >
           </div>
           <div>
-            <a-tag color="#108ee9">Start : {{ item.start }}</a-tag>
-            <a-tag color="#108ee9">End : {{ item.end }}</a-tag>
+            <a-tag color="#108ee9"
+              >Time : {{ item.start.split(' ')[1].slice(0, 5) }} -
+              {{ item.end.split(' ')[1].slice(0, 5) }}</a-tag
+            >
           </div>
         </a-space>
       </a-timeline-item>
-      <a-empty
-        :image="simpleImage"
-        v-if="bookingList.length == 0"
-        description="There is no schedule"
-      />
     </a-timeline>
+    <div class="empty-list" v-if="bookingList.length == 0">
+      <a-empty :image="simpleImage" description="There is no schedule" />
+    </div>
   </a-card>
   <!-- </a-col> -->
 </template>
@@ -113,5 +113,12 @@ onMounted(fetchBookingList)
 
 .booking-card::-webkit-scrollbar {
   display: none; /* Menyembunyikan scrollbar */
+}
+
+.empty-list {
+  padding-top: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

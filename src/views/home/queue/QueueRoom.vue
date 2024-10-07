@@ -4,14 +4,14 @@
       <div class="room-info">
         <a-card class="card-room-info">
           <a-flex justify="center" align="center" gap="middle" style="margin-bottom: 1rem">
-            <a-image :src="hrs" :width="100" :preview="false"></a-image>
-            <h2 :class="{ 'logo-name': true, 'intro-active': isActive }">
+            <a-image :src="hrs" :height="70" :preview="false"></a-image>
+            <span :class="{ 'logo-name': true, 'intro-active': isActive }">
               Meeting Room<br />
               Management
-            </h2>
+            </span>
           </a-flex>
           <a-dropdown>
-            <h3 class="room-name">{{ roomData?.room_name }}</h3>
+            <h2 class="room-name">{{ roomData?.room_name }}</h2>
             <template #overlay>
               <a-menu>
                 <a-menu-item
@@ -24,41 +24,64 @@
               </a-menu>
             </template>
           </a-dropdown>
-          <p><UserOutlined /> Capacity : {{ roomData?.capacity.toLocaleString() }} persons</p>
+          <p style="padding-top: 5%">
+            <UserOutlined /> Capacity : {{ roomData?.capacity.toLocaleString() }} persons
+          </p>
           <p><BankOutlined /> Description : {{ roomData?.description }}</p>
           <p v-if="ongoing">
-            <LoadingOutlined spin /> Ongoing :
+            Ongoing :
             <a-tag color="green"
               ><template #icon> <FormOutlined /> </template>
               {{ ongoing.meeting_name }}
             </a-tag>
-            <a-tag color="red"
-              ><template #icon> <UserOutlined /> </template>
-              {{ ongoing.username }}
-            </a-tag>
+            <span v-if="ongoing.status == 'Present'">
+              <CheckCircleOutlined style="color: #264d8e" />
+            </span>
           </p>
           <p v-else>
-            <LoadingOutlined spin /> Ongoing :
-            <a-tag color="red">No Schedule </a-tag>
+            Ongoing :
+            <a-tag color="red">
+              <template #icon> </template>
+              No Schedule
+            </a-tag>
           </p>
 
           <p v-if="upcoming">
-            <ForwardOutlined /> Upcoming :
+            Upcoming :
             <a-tag color="green">
               <template #icon> <FormOutlined /> </template>{{ upcoming.meeting_name }}
             </a-tag>
-            <a-tag color="red"
-              ><template #icon> <UserOutlined /> </template>
-              {{ upcoming.username }}
-            </a-tag>
           </p>
           <p v-else>
-            <ForwardOutlined /> Upcoming :
-            <a-tag color="red"> No Schedule </a-tag>
+            Upcoming :
+            <a-tag color="red">
+              <template #icon> </template>
+              No Schedule
+            </a-tag>
           </p>
+          <!-- Button Present or Cancel -->
+          <a-flex align="center" justify="center" gap="middle" style="padding-top: 2%">
+            <a-button
+              class="button-meeting"
+              size="large"
+              type="primary"
+              :disabled="buttonState"
+              @click="updateMeetingStatus(ongoing, 'Present')"
+              ><CheckCircleOutlined /> Present
+            </a-button>
+            <a-button
+              class="button-meeting"
+              type="primary"
+              size="large"
+              danger
+              :disabled="buttonState"
+              @click="updateMeetingStatus(ongoing, 'Cancel')"
+              ><CloseCircleOutlined /> Cancel
+            </a-button>
+          </a-flex>
           <template #actions>
-            <p>{{ currentTime[0] }}</p>
-            <p>{{ currentTime[1] }}</p>
+            <p><CalendarOutlined /> {{ currentTime[0] }}</p>
+            <p><ClockCircleOutlined /> {{ currentTime[1] }}</p>
           </template>
         </a-card>
       </div>
@@ -111,17 +134,17 @@ import axios from 'axios'
 import { onMounted, ref, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  // ClockCircleOutlined,
   FormOutlined,
   UserOutlined,
   BankOutlined,
-  LoadingOutlined,
-  ForwardOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
-  CarryOutOutlined
+  CarryOutOutlined,
+  CalendarOutlined,
+  CloseCircleOutlined
 } from '@ant-design/icons-vue'
 import hrs from '@/assets/hrs.png'
+import { message } from 'ant-design-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -131,8 +154,9 @@ const roomData = ref(null)
 const roomList = ref([])
 let idroom = route.params.idroom
 const currentTime = ref('')
-const ongoing = ref('')
+const ongoing = ref(null)
 const upcoming = ref('')
+const buttonState = ref()
 let timer, bookingsInterval
 
 const formatDate = (date) => {
@@ -230,6 +254,45 @@ const updateOngoingAndUpcoming = () => {
   }
 }
 
+const updateButtonValidate = (data) => {
+  if (!data || !data.start) {
+    // Disable tombol jika tidak ada data booking atau data tidak valid
+    buttonState.value = true
+    return
+  }
+
+  const now = new Date()
+  const start = new Date(data.start)
+  const diffInMinutes = (now - start) / (1000 * 60) // Hitung selisih waktu dalam menit
+
+  // Aktifkan tombol jika waktu sekarang >= start dan masih dalam 3 menit pertama setelah start
+  buttonState.value = diffInMinutes >= 0 && diffInMinutes < 15 && data.status == null ? false : true
+
+  if (diffInMinutes >= 15 && data.status == null) {
+    updateMeetingStatus(data, 'Cancel')
+  }
+}
+
+const updateMeetingStatus = async (data, status) => {
+  try {
+    if (status == 'Present') {
+      await axios.patch(`http://192.168.148.125:5151/bookings/${data.id_booking}`, {
+        status: status,
+        id_room: data.id_room,
+        meeting_name: data.meeting_name,
+        start: data.start,
+        end: data.end
+      })
+      message.success('Present success')
+    } else if (status == 'Cancel') {
+      await axios.delete(`http://192.168.148.125:5151/bookings/${data.id_booking}`)
+      message.error('Meeting has been canceled')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const fetchAllRoom = async () => {
   try {
     const response = await axios.get(`http://192.168.148.125:5151/rooms`)
@@ -261,6 +324,8 @@ onMounted(() => {
   timer = setInterval(() => {
     updateClock()
     updateOngoingAndUpcoming()
+    updateButtonValidate(ongoing.value)
+    console.log(ongoing.value)
   }, 1000)
 
   setTimeout(() => {
@@ -292,11 +357,11 @@ watch(
 }
 
 .room-info {
-  height: 400px;
+  max-height: 600px;
 }
 
 .list {
-  height: 350px;
+  height: 600px;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none;
@@ -320,20 +385,22 @@ watch(
 }
 
 .wrapper-booking-list {
-  max-width: 400px;
+  max-width: 450px;
   max-height: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .empty-list {
-  height: inherit;
+  height: 580px;
+  width: 305px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .card-list {
+  width: 305px;
   margin-bottom: 0.5rem;
 }
 
@@ -342,15 +409,24 @@ watch(
 }
 
 .card-room-info {
-  max-width: 400px;
-  max-height: 100%;
+  max-width: 500px;
+  height: 100%;
+}
+
+.card-room-info p {
+  font-size: large;
 }
 
 .ant-card {
   border: 1px solid #264d8e;
 }
 
+.ant-tag {
+  font-size: medium;
+}
+
 .logo-name {
+  font-size: 1.8rem;
   margin-bottom: 0px;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
@@ -376,5 +452,18 @@ watch(
   border-radius: 30px;
   color: white;
   background-color: #264d8e;
+}
+
+.button-meeting {
+  padding: 12px 24px;
+  height: auto;
+  line-height: 1.5;
+}
+
+.button-meeting.ant-btn {
+  min-width: 150px;
+  min-height: 80px;
+  font-size: 20px;
+  font-weight: bold;
 }
 </style>

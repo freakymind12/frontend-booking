@@ -3,7 +3,7 @@
   <a-card class="booking-card">
     <a-flex justify="space-between">
       <h2>Your Booking List</h2>
-      <a-date-picker style="height: 32px; width: 30%" v-model:value="selectedDate" />
+      <a-date-picker style="height: 32px; width: 35%" v-model:value="selectedDate" />
     </a-flex>
     <a-timeline>
       <a-timeline-item v-for="item in bookingList" :key="item.id_booking">
@@ -23,8 +23,10 @@
             >
           </div>
           <div>
-            <a-tag color="#108ee9">Start : {{ item.start }}</a-tag>
-            <a-tag color="#108ee9">End : {{ item.end }}</a-tag>
+            <a-tag color="#108ee9"
+              >Time : {{ item.start.split(' ')[1].slice(0, 5) }} -
+              {{ item.end.split(' ')[1].slice(0, 5) }}</a-tag
+            >
 
             <a-popconfirm
               title="Are you sure delete this booking?"
@@ -37,12 +39,14 @@
           </div>
         </a-space>
       </a-timeline-item>
+    </a-timeline>
+    <div class="empty-list">
       <a-empty
         :image="simpleImage"
         v-if="bookingList.length == 0"
         description="Booking list empty"
       />
-    </a-timeline>
+    </div>
   </a-card>
   <!-- </a-col> -->
 </template>
@@ -154,5 +158,9 @@ onMounted(async () => {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   transform: scale(1.02);
   cursor: pointer;
+}
+
+.empty-list {
+  padding-top: 45%;
 }
 </style>
