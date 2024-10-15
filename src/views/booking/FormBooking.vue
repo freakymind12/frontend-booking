@@ -1,6 +1,4 @@
 <template>
-  <!-- <a-col :span="5"> -->
-  <!-- <div class="wrapper-form-booking"> -->
   <a-card class="booking-card">
     <h2>Fill this form to booking</h2>
     <a-form layout="vertical" :model="form" @finish="handleBooking">
@@ -21,6 +19,7 @@
           :placeholder="['Start Time', 'End Time']"
           v-model:value="form.time"
           :disabled-date="disabledDate"
+          :disabled-time="disabledTime"
         />
       </a-form-item>
       <a-form-item>
@@ -65,23 +64,24 @@
         v-for="book in validationResponse.data.booking"
         :key="book.id_booking"
       >
-        <a-tag color="green">
-          <template #icon><form-outlined /></template>
-          {{ book.meeting_name }}
-        </a-tag>
-        <a-tag color="red">
-          <template #icon><user-outlined /></template>
-          {{ book.username }}
-        </a-tag>
-        <a-tag color="pink">
-          <template #icon> <bank-outlined /></template>
-          {{ book.dept }}</a-tag
-        >
+        <a-flex gap="small" wrap="wrap">
+          <a-tag color="green">
+            <template #icon><form-outlined /></template>
+            {{ book.meeting_name }}
+          </a-tag>
+          <a-tag color="red">
+            <template #icon><user-outlined /></template>
+            {{ book.username }}
+          </a-tag>
+          <a-tag color="#108ee9">
+            Time :
+            {{ book.start.split(' ')[1].slice(0, 8) }} -
+            {{ book.end.split(' ')[1].slice(0, 8) }}</a-tag
+          >
+        </a-flex>
       </a-timeline-item>
     </a-timeline>
   </a-card>
-  <!-- </a-col> -->
-  <!-- </div> -->
 </template>
 
 <script setup>
@@ -91,7 +91,7 @@ import auth from '@/auth/auth'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
-import { UserOutlined, BankOutlined, FormOutlined } from '@ant-design/icons-vue'
+import { UserOutlined, FormOutlined } from '@ant-design/icons-vue'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -183,6 +183,14 @@ const disabledDate = (current) => {
   today.setHours(0, 0, 0, 0)
   threeMonthsFromNow.setHours(23, 59, 59, 999)
   return current < today || current > threeMonthsFromNow
+}
+
+const disabledTime = () => {
+  return {
+    disabledHours: () => {
+      return [...Array(24).keys()].filter((h) => h < 7 || h > 19)
+    }
+  }
 }
 
 watch(
