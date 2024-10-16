@@ -74,7 +74,7 @@ onMounted(() => {
 
 const handleLogin = async () => {
   try {
-    const response = await axios.post('http://192.168.148.201:5151/auth/login', {
+    const response = await axios.post('http://192.168.148.201:5050/auth/login', {
       email: form.value.email,
       password: form.value.password
     })
@@ -94,7 +94,7 @@ const info = () => {
 const toQueue = async () => {
   let idroom
   try {
-    const response = await axios.get('http://192.168.148.201:5151/rooms')
+    const response = await axios.get('http://192.168.148.201:5050/rooms')
     if (response.data.data.length > 0) {
       idroom = response.data.data[0].id_room
       router.push(`/queue/${idroom}`)

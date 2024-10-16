@@ -204,7 +204,7 @@ const fetchBookingList = async (room) => {
 
   try {
     const response = await axios.get(
-      `http://192.168.148.201:5151/bookings/queue?id_room=${room}&date=${formattedDate}`
+      `http://192.168.148.201:5050/bookings/queue?id_room=${room}&date=${formattedDate}`
     )
     bookings.value = response.data.data
   } catch (error) {
@@ -218,7 +218,7 @@ const updateClock = () => {
 
 const fetchRoom = async (room) => {
   try {
-    const response = await axios.get(`http://192.168.148.201:5151/rooms/${room}`)
+    const response = await axios.get(`http://192.168.148.201:5050/rooms/${room}`)
     roomData.value = response.data.data[0]
   } catch (error) {
     console.error(error)
@@ -276,7 +276,7 @@ const updateButtonValidate = (data) => {
 const updateMeetingStatus = async (data, status) => {
   try {
     if (status == 'Present') {
-      await axios.patch(`http://192.168.148.201:5151/bookings/${data.id_booking}`, {
+      await axios.patch(`http://192.168.148.201:5050/bookings/${data.id_booking}`, {
         status: status,
         id_room: data.id_room,
         meeting_name: data.meeting_name,
@@ -285,7 +285,7 @@ const updateMeetingStatus = async (data, status) => {
       })
       message.success('Present success')
     } else if (status == 'Cancel') {
-      await axios.delete(`http://192.168.148.201:5151/bookings/${data.id_booking}`)
+      await axios.delete(`http://192.168.148.201:5050/bookings/${data.id_booking}`)
       message.error('Meeting has been canceled')
     }
   } catch (error) {
@@ -295,7 +295,7 @@ const updateMeetingStatus = async (data, status) => {
 
 const fetchAllRoom = async () => {
   try {
-    const response = await axios.get(`http://192.168.148.201:5151/rooms`)
+    const response = await axios.get(`http://192.168.148.201:5050/rooms`)
     roomList.value = response.data.data
   } catch (error) {
     console.error(error)

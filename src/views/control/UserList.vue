@@ -106,7 +106,7 @@ const filteredUsers = computed(() => {
 
 const fetchUser = async () => {
   try {
-    const response = await axios.get('http://192.168.148.201:5151/users')
+    const response = await axios.get('http://192.168.148.201:5050/users')
     userList.value = response.data.data
   } catch (error) {
     console.error(error)
@@ -115,7 +115,7 @@ const fetchUser = async () => {
 
 const handlePromote = async (user) => {
   try {
-    await axios.patch('http://192.168.148.201:5151/users/roles', {
+    await axios.patch('http://192.168.148.201:5050/users/roles', {
       id_user: user.id_user,
       roles: user.roles === 'staff' ? 'admin' : 'staff'
     })
@@ -128,7 +128,7 @@ const handlePromote = async (user) => {
 
 const handleDemote = async (user) => {
   try {
-    await axios.patch('http://192.168.148.201:5151/users/roles', {
+    await axios.patch('http://192.168.148.201:5050/users/roles', {
       id_user: user.id_user,
       roles: 'viewer'
     })

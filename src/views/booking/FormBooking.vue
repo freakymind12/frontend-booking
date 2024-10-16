@@ -121,7 +121,7 @@ const getUserData = async () => {
 
 const getRoomData = async () => {
   try {
-    const response = await axios.get('http://192.168.148.201:5151/rooms')
+    const response = await axios.get('http://192.168.148.201:5050/rooms')
     rooms.value = response.data.data
   } catch (error) {
     console.error(error)
@@ -135,7 +135,7 @@ const convertUtcTimesToLocal = (utcTimes) => {
 const handleBooking = async () => {
   try {
     const [startTime, endTime] = convertUtcTimesToLocal(form.value.time)
-    await axios.post('http://192.168.148.201:5151/bookings', {
+    await axios.post('http://192.168.148.201:5050/bookings', {
       id_room: form.value.id_room,
       meeting_name: form.value.meeting_name,
       id_user: user.value.id,
@@ -167,7 +167,7 @@ const checkBooking = async (room, time) => {
   try {
     const [startTime, endTime] = convertUtcTimesToLocal(time)
     const response = await axios.get(
-      `http://192.168.148.201:5151/bookings/check?id_room=${room}&start=${startTime}&end=${endTime}`
+      `http://192.168.148.201:5050/bookings/check?id_room=${room}&start=${startTime}&end=${endTime}`
     )
     validationResponse.value = response.data
     console.log(validationResponse.value)

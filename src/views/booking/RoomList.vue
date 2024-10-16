@@ -31,7 +31,7 @@ const emits = defineEmits(['select-room'])
 
 const fetchRoom = async () => {
   try {
-    const response = await axios.get('http://192.168.148.201:5151/rooms')
+    const response = await axios.get('http://192.168.148.201:5050/rooms')
     rooms.value = response.data.data
     if (rooms.value.length > 0) {
       emits('select-room', rooms.value[0])

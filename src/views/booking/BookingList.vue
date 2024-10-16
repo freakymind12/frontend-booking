@@ -75,7 +75,7 @@ const fetchBookingList = async () => {
   try {
     const formattedDate = dayjs(selectedDate.value).format('YYYY-MM-DD')
     const response = await axios.get(
-      `http://192.168.148.201:5151/bookings/user?id_user=${user.value.id}&date=${formattedDate}`
+      `http://192.168.148.201:5050/bookings/user?id_user=${user.value.id}&date=${formattedDate}`
     )
     bookingList.value = response.data.data
   } catch (error) {
@@ -108,7 +108,7 @@ const getUserData = async () => {
 
 const handleDelete = async (id) => {
   try {
-    await axios.delete(`http://192.168.148.201:5151/bookings/${id}`)
+    await axios.delete(`http://192.168.148.201:5050/bookings/${id}`)
     emits('delete-booking')
     fetchBookingList()
   } catch (error) {

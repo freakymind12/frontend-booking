@@ -9,7 +9,7 @@ const checkRoles = async () => {
     const token = Cookies.get('jwt_token')
     // Lakukan request ke backend untuk verifikasi token
     const response = await axios.post(
-      'http://192.168.148.201:5151/auth/validate',
+      'http://192.168.148.201:5050/auth/validate',
       {},
       {
         headers: {
@@ -39,7 +39,7 @@ const checkRoles = async () => {
 
 //       // Lakukan request ke backend untuk verifikasi token
 //       const response = await axios.post(
-//         'http://192.168.148.201:5151/auth/validate',
+//         'http://192.168.148.201:5050/auth/validate',
 //         {}, //body
 //         {
 //           headers: {
@@ -71,7 +71,7 @@ const checkRoles = async () => {
 //   }
 // }
 
-const API_URL = 'http://192.168.148.201:5151/auth/validate'
+const API_URL = 'http://192.168.148.201:5050/auth/validate'
 
 // Fungsi untuk mengirim request verifikasi token
 const verifyToken = async (token) => {

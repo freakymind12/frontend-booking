@@ -47,7 +47,7 @@ const props = defineProps({
 
 const handleEdit = async (id) => {
   try {
-    await axios.patch(`http://192.168.148.201:5151/rooms/${id}`, {
+    await axios.patch(`http://192.168.148.201:5050/rooms/${id}`, {
       room_name: form.value.room_name,
       capacity: form.value.capacity,
       description: form.value.description
