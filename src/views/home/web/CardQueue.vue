@@ -55,7 +55,7 @@ const queueList = ref([])
 
 const fetchRoom = async () => {
   try {
-    const response = await axios.get('http://192.168.148.125:5151/rooms')
+    const response = await axios.get('http://192.168.148.201:5151/rooms')
     options.value = response.data.data.map((room) => ({
       value: room.id_room,
       label: room.room_name
@@ -70,7 +70,7 @@ const fetchBooking = async (id_room, date) => {
   try {
     const formattedDate = dayjs(date).format('YYYY-MM-DD')
     const response = await axios.get(
-      `http://192.168.148.125:5151/bookings/queue?id_room=${id_room}&date=${formattedDate}`
+      `http://192.168.148.201:5151/bookings/queue?id_room=${id_room}&date=${formattedDate}`
     )
     queueList.value = response.data.data
   } catch (error) {

@@ -56,7 +56,7 @@ const handleReset = () => {
 
 const handleAddRoom = async () => {
   try {
-    await axios.post('http://192.168.148.125:5151/rooms', {
+    await axios.post('http://192.168.148.201:5151/rooms', {
       room_name: form.value.room_name,
       capacity: form.value.capacity,
       description: form.value.description

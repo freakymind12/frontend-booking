@@ -61,7 +61,7 @@ const handleClose = () => {
 
 const fetchRoom = async () => {
   try {
-    const response = await axios.get('http://192.168.148.125:5151/rooms')
+    const response = await axios.get('http://192.168.148.201:5151/rooms')
     rooms.value = response.data.data
   } catch (error) {
     console.error(error)
@@ -70,7 +70,7 @@ const fetchRoom = async () => {
 
 const handleDelete = async (id) => {
   try {
-    await axios.delete(`http://192.168.148.125:5151/rooms/${id}`)
+    await axios.delete(`http://192.168.148.201:5151/rooms/${id}`)
     fetchRoom()
     message.info('Success delete room')
   } catch (error) {

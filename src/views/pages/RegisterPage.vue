@@ -119,7 +119,7 @@ const handleRegister = async () => {
       errorMessage.value = 'password and retype password do not match'
       return
     }
-    await axios.post('http://192.168.148.125:5151/users/signup', {
+    await axios.post('http://192.168.148.201:5151/users/signup', {
       username: form.value.username,
       email: form.value.email,
       password: form.value.password,

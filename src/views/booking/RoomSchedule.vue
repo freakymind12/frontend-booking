@@ -70,7 +70,7 @@ const fetchBookingList = async () => {
   try {
     const formattedDate = dayjs(selectedDate.value).format('YYYY-MM-DD')
     const response = await axios.get(
-      `http://192.168.148.125:5151/bookings/queue?id_room=${props.room.id_room}&date=${formattedDate}`
+      `http://192.168.148.201:5151/bookings/queue?id_room=${props.room.id_room}&date=${formattedDate}`
     )
     bookingList.value = response.data.data
   } catch (error) {
