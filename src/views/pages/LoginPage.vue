@@ -155,4 +155,5 @@ const toQueue = async () => {
 .logo-img:hover {
   cursor: pointer;
 }
+
 </style>

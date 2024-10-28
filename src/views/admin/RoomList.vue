@@ -144,4 +144,8 @@ onMounted(() => {
 .delete-icon:hover {
   color: red;
 }
+
+.room-card p {
+  font-size:16px;
+}
 </style>

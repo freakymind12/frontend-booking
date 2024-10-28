@@ -60,7 +60,7 @@
             </a-tag>
           </p>
           <!-- Button Present or Cancel -->
-          <a-flex align="center" justify="center" gap="middle" style="padding-top: 2%">
+          <a-flex align="center" justify="center" gap="middle" style="padding-top: 2%" v-if="ongoing && ongoing.status == null || ongoing == null">
             <a-button
               class="button-meeting"
               size="large"
@@ -79,6 +79,9 @@
               ><CloseCircleOutlined /> Cancel
             </a-button>
           </a-flex>
+          <a-flex align="center" justify="center" style="padding-top:2%" v-if="ongoing != null && ongoing.status == 'Present'">
+            <a-button block class="button-meeting" size="large" type="primary" style="background-color: #389e0d; color: white;">Meeting is ongoing</a-button>
+          </a-flex>
           <template #actions>
             <p><CalendarOutlined /> {{ currentTime[0] }}</p>
             <p><ClockCircleOutlined /> {{ currentTime[1] }}</p>
@@ -94,15 +97,13 @@
         </a-flex>
         <div class="list">
           <a-card class="card-list" v-for="booking in bookings" :key="booking.id_booking" hoverable>
-            <a-flex gap="small" wrap="wrap" vertical style="margin-bottom: 0.5rem">
+            <a-flex gap="small" vertical style="margin-bottom: 0.5rem">
               <a-tag color="red"
                 ><template #icon> <UserOutlined /> </template>{{ booking.username }}</a-tag
               >
               <a-tag color="green">
                 <template #icon> <FormOutlined /> </template>{{ booking.meeting_name }}</a-tag
               >
-            </a-flex>
-            <a-flex wrap="wrap">
               <a-tag color="#8967B3">
                 <template #icon>
                   <ClockCircleOutlined />
@@ -408,6 +409,12 @@ watch(
   border-color: #264d8e;
 }
 
+.card-list .ant-tag {
+  white-space: normal; 
+  overflow-wrap: break-word; /* Memastikan kata panjang dibungkus dengan baik */
+  word-break: break-word;
+}
+
 .card-room-info {
   max-width: 500px;
   height: 100%;
@@ -422,7 +429,7 @@ watch(
 }
 
 .ant-tag {
-  font-size: medium;
+  font-size: large;
 }
 
 .logo-name {

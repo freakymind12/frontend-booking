@@ -151,7 +151,7 @@ onMounted(async () => {
 }
 
 .user-card .ant-tag {
-  font-size: small;
+  font-size: 14px;
 }
 
 .role-tag:hover {

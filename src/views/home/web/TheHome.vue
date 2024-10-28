@@ -18,7 +18,6 @@ import CardQueue from './CardQueue.vue'
 
 <style scoped>
 .banner {
-  margin-bottom: 20px;
   text-align: center;
 }
 
@@ -26,10 +25,10 @@ import CardQueue from './CardQueue.vue'
   font-size: 2.5rem;
 }
 .banner p {
-  font-size: 1rem;
+  font-size: 18px;
 }
 
 .wrapper {
-  padding-top: 50px;
+  padding-top: 1.5rem;
 }
 </style>

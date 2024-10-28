@@ -48,7 +48,6 @@ onMounted(() => {
 
 <style scoped>
 .room-card {
-  padding: 24px;
   background-color: #ffffff;
   margin-bottom: 1rem;
   border: solid #264d8e 1px;

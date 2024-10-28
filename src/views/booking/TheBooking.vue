@@ -46,7 +46,7 @@ const handleSelectRoom = (room) => {
   font-size: 2.5rem;
 }
 .banner p {
-  font-size: 1rem;
+  font-size: 18px;
 }
 .wrapper {
   padding: 20px;

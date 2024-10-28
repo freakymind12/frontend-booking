@@ -147,7 +147,7 @@ onMounted(async () => {
 }
 
 .ant-tag {
-  font-size: 0.8rem;
+  font-size: .8rem;
 }
 .empty-list {
   height: inherit;

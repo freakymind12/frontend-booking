@@ -4,10 +4,10 @@
       <img src="@/assets/hrs.png" alt="Logo HRS" />
     </div>
     <a-menu mode="horizontal" class="menu">
-      <a-menu-item key="home">
+      <a-menu-item key="home" class="large-menu-item">
         <RouterLink to="/">Home</RouterLink>
       </a-menu-item>
-      <a-menu-item key="booking">
+      <a-menu-item key="booking" class="large-menu-item">
         <RouterLink to="/booking">Booking</RouterLink>
       </a-menu-item>
       <a-menu-item key="admin" v-if="user.role == 'admin' || user.role == 'staff'">
@@ -82,5 +82,10 @@ onMounted(() => {
   flex: 1;
   align-items: center;
   padding-left: 2em;
+}
+
+.ant-menu-title-content a{
+  font-size:16px;
+  font-family: sans-serif;
 }
 </style>

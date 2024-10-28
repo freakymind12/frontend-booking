@@ -10,12 +10,12 @@
         <a-space direction="vertical">
           <div>
             <a-tag color="green"
-              ><form-outlined /> {{ capitalizeEachWord(item.meeting_name) }}</a-tag
+              ><form-outlined /> {{ item.meeting_name }}</a-tag
             >
           </div>
           <div>
             <a-tag color="purple"
-              ><environment-outlined /> {{ capitalizeEachWord(item.room_name) }}</a-tag
+              ><environment-outlined /> {{ item.room_name }}</a-tag
             >
             <a-tag color="cyan">
               <template #icon> <clock-circle-outlined /> </template
@@ -34,7 +34,7 @@
               cancel-text="No"
               @confirm="handleDelete(item.id_booking)"
             >
-              <a-tag color="red" class="delete-tag"><delete-outlined /></a-tag>
+              <a-tag color="red" class="delete-tag"><delete-outlined /> Delete</a-tag>
             </a-popconfirm>
           </div>
         </a-space>
@@ -91,12 +91,12 @@ const calculateDuration = (startDateTime, endDateTime) => {
   return differenceInMinutes
 }
 
-const capitalizeEachWord = (str) => {
-  return str
-    .split(' ') // Pisahkan string menjadi array kata
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Kapitalisasi setiap kata
-    .join(' ') // Gabungkan kembali array menjadi string
-}
+// const capitalizeEachWord = (str) => {
+//   return str
+//     .split(' ') // Pisahkan string menjadi array kata
+//     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Kapitalisasi setiap kata
+//     .join(' ') // Gabungkan kembali array menjadi string
+// }
 
 const getUserData = async () => {
   try {
@@ -162,5 +162,11 @@ onMounted(async () => {
 
 .empty-list {
   padding-top: 45%;
+}
+
+.ant-tag {
+  font-size:14px;
+  white-space:normal;
+  word-wrap:break-word;
 }
 </style>

@@ -23,13 +23,13 @@
           </div>
           <div>
             <a-tag color="green"
-              ><form-outlined /> {{ capitalizeEachWord(item.meeting_name) }}</a-tag
-            >
-            <a-tag color="purple"
-              ><EnvironmentOutlined /> {{ capitalizeEachWord(item.room_name) }}</a-tag
+              ><form-outlined /> {{ item.meeting_name }}</a-tag
             >
           </div>
           <div>
+            <a-tag color="purple"
+              ><EnvironmentOutlined /> {{ item.room_name }}</a-tag
+            >
             <a-tag color="#108ee9"
               >Time : {{ item.start.split(' ')[1].slice(0, 5) }} -
               {{ item.end.split(' ')[1].slice(0, 5) }}</a-tag
@@ -85,11 +85,11 @@ const calculateDuration = (startDateTime, endDateTime) => {
   return differenceInMinutes
 }
 
-const capitalizeEachWord = (str) =>
-  str
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
+// const capitalizeEachWord = (str) =>
+//   str
+//     .split(' ')
+//     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+//     .join(' ')
 
 // Watch for changes in room, refreshKey, or selectedDate
 watch([() => props.room, () => props.refreshKey, () => selectedDate.value], fetchBookingList)
@@ -120,5 +120,11 @@ onMounted(fetchBookingList)
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.ant-tag {
+  font-size:14px;
+  white-space:normal;
+  word-wrap: break-word;
 }
 </style>
