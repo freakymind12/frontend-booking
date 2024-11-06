@@ -1,6 +1,9 @@
 <template>
   <a-flex justify="center" align="center" class="register-container">
     <a-card class="register-card">
+      <a-flex justify="flex-end">
+        <GoogleTranslate />
+      </a-flex>
       <a-flex justify="center" align="center" gap="small" vertical>
         <a-flex justify="center" align="center" gap="large">
           <a-image :src="hrs" :width="100" :preview="false" />
@@ -95,6 +98,7 @@ import { notification, message } from 'ant-design-vue'
 import { h } from 'vue'
 import { LoadingOutlined } from '@ant-design/icons-vue'
 import hrs from '@/assets/hrs.png'
+import GoogleTranslate from '@/components/GoogleTranslate.vue'
 
 const form = ref({
   username: '',

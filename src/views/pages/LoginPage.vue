@@ -1,6 +1,9 @@
 <template>
   <a-flex justify="center" align="center" class="register-container">
     <a-card class="register-card">
+      <a-flex justify="flex-end">
+        <GoogleTranslate />
+      </a-flex>
       <a-flex justify="center" align="center" gap="small" vertical>
         <a-flex justify="center" align="center" gap="large" class="logo-img">
           <a-image :src="hrs" :width="100" :preview="false" @click="toQueue" />
@@ -53,6 +56,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { message } from 'ant-design-vue'
 import hrs from '@/assets/hrs.png'
+import GoogleTranslate from '@/components/GoogleTranslate.vue'
 
 const form = ref({
   email: '',

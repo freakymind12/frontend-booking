@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@google-translate-select/vue3": "^0.1.8",
     "ant-design-vue": "^4.2.3",
     "axios": "^1.7.7",
     "js-cookie": "^3.0.5",
+    "lucide-vue-next": "^0.454.0",
     "moment-timezone": "^0.5.45",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"

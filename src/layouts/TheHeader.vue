@@ -84,8 +84,8 @@ onMounted(() => {
   padding-left: 2em;
 }
 
-.ant-menu-title-content a{
-  font-size:16px;
+.ant-menu-title-content a {
+  font-size: 16px;
   font-family: sans-serif;
 }
 </style>
