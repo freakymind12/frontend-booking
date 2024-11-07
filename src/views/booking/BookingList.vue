@@ -1,33 +1,36 @@
 <template>
   <!-- <a-col :span="6"> -->
   <a-card class="booking-card">
-    <a-flex justify="space-between">
+    <a-flex justify="space-between" align="center">
       <h2>Your Booking List</h2>
-      <a-date-picker style="height: 32px; width: 35%" v-model:value="selectedDate" />
+      <a-input v-model:value="search" placeholder="Search.." class="search" size="small">
+          <template #prefix>
+            <SearchOutlined />
+          </template>
+        </a-input>
     </a-flex>
     <a-timeline>
-      <a-timeline-item v-for="item in bookingList" :key="item.id_booking">
+      <a-timeline-item v-for="item in filteredBookingList" :key="item.id_booking">
         <a-space direction="vertical">
           <div>
-            <a-tag color="green"
-              ><form-outlined /> {{ item.meeting_name }}</a-tag
+            <a-tag color="grey">Date : {{ item.start.split(' ')[0] }}</a-tag>
+            <a-tag color="#108ee9"
+              >Time : {{ item.start.split(' ')[1].slice(0, 5) }} -
+              {{ item.end.split(' ')[1].slice(0, 5) }}</a-tag
             >
           </div>
           <div>
-            <a-tag color="purple"
-              ><environment-outlined /> {{ item.room_name }}</a-tag
-            >
+            <a-tag color="green"><form-outlined /> {{ item.meeting_name }}</a-tag>
+          </div>
+          <div>
+            <a-tag color="purple"><environment-outlined /> {{ item.room_name }}</a-tag>
             <a-tag color="cyan">
               <template #icon> <clock-circle-outlined /> </template
               >{{ calculateDuration(item.start, item.end) }} min</a-tag
             >
           </div>
-          <div>
-            <a-tag color="#108ee9"
-              >Time : {{ item.start.split(' ')[1].slice(0, 5) }} -
-              {{ item.end.split(' ')[1].slice(0, 5) }}</a-tag
-            >
 
+          <div>
             <a-popconfirm
               title="Are you sure delete this booking?"
               ok-text="Yes"
@@ -53,29 +56,28 @@
 
 <script setup>
 import axios from 'axios'
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import auth from '@/auth/auth'
-import dayjs from 'dayjs'
 import {
   ClockCircleOutlined,
   DeleteOutlined,
   FormOutlined,
-  EnvironmentOutlined
+  EnvironmentOutlined,
+  SearchOutlined
 } from '@ant-design/icons-vue'
 
 const user = ref('')
 const bookingList = ref('')
+const search = ref('')
 const props = defineProps({
   refreshKey: Number
 })
-const selectedDate = ref(dayjs())
 const emits = defineEmits(['delete-booking'])
 
 const fetchBookingList = async () => {
   try {
-    const formattedDate = dayjs(selectedDate.value).format('YYYY-MM-DD')
     const response = await axios.get(
-      `http://192.168.148.201:5050/bookings/user?id_user=${user.value.id}&date=${formattedDate}`
+      `http://192.168.148.201:5050/bookings/user?id_user=${user.value.id}`
     )
     bookingList.value = response.data.data
   } catch (error) {
@@ -90,13 +92,6 @@ const calculateDuration = (startDateTime, endDateTime) => {
   const differenceInMinutes = Math.round(differenceInMillis / (1000 * 60)).toLocaleString()
   return differenceInMinutes
 }
-
-// const capitalizeEachWord = (str) => {
-//   return str
-//     .split(' ') // Pisahkan string menjadi array kata
-//     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Kapitalisasi setiap kata
-//     .join(' ') // Gabungkan kembali array menjadi string
-// }
 
 const getUserData = async () => {
   try {
@@ -116,6 +111,19 @@ const handleDelete = async (id) => {
   }
 }
 
+const filteredBookingList = computed(() => {
+  if (!search.value) {
+    return bookingList.value
+  }
+  return bookingList.value.filter(
+    (booking) =>
+      booking.meeting_name.toLowerCase().includes(search.value.toLowerCase()) ||
+      booking.room_name.toLowerCase().includes(search.value.toLowerCase()) ||
+      booking.start.toLowerCase().includes(search.value.toLowerCase()) ||
+      booking.end.toLowerCase().includes(search.value.toLowerCase())
+  )
+})
+
 watch(
   () => props.refreshKey,
   () => {
@@ -123,12 +131,9 @@ watch(
   }
 )
 
-watch(
-  () => selectedDate.value,
-  () => {
-    fetchBookingList()
-  }
-)
+watch(() => {
+  fetchBookingList()
+})
 
 onMounted(async () => {
   await getUserData()
@@ -151,7 +156,7 @@ onMounted(async () => {
 }
 
 .booking-card::-webkit-scrollbar {
-  display: none; /* Menyembunyikan scrollbar */
+  display: none;
 }
 
 .delete-tag:hover {
@@ -164,9 +169,15 @@ onMounted(async () => {
   padding-top: 45%;
 }
 
+.search{
+  width: 40%;
+  margin-bottom: 30px;
+  height: fit-content;
+}
+
 .ant-tag {
-  font-size:14px;
-  white-space:normal;
-  word-wrap:break-word;
+  font-size: 14px;
+  white-space: normal;
+  word-wrap: break-word;
 }
 </style>

@@ -1,0 +1,21 @@
+# Node modules dan file build hasil kompilasi
+node_modules
+dist
+
+# Konfigurasi dan file khusus developer
+.env
+.vscode/
+*.log
+*.env
+
+# Git dan file manajemen versi
+.git
+.gitignore
+
+# Docker files
+Dockerfile
+docker-compose.yml
+
+# Sistem operasi atau file yang tidak relevan
+.DS_Store
+Thumbs.db
