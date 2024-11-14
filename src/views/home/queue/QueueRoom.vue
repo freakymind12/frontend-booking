@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <a-flex justify="center" align="center" wrap="wrap" gap="large">
+    <a-flex justify="center" align="center" wrap="wrap" gap="middle">
       <div class="room-info">
         <a-card class="card-room-info">
           <a-flex justify="center" align="center" gap="middle" style="margin-bottom: 1rem">
@@ -358,13 +358,15 @@ watch(
 }
 
 .room-info {
-  max-height: 600px;
+  width: 650px;
+  height: 100%;
 }
 
 .list {
   height: 600px;
   overflow-y: auto;
   overflow-x: hidden;
+  padding-right: .5rem;
   scrollbar-width: none;
 }
 
@@ -387,13 +389,13 @@ watch(
 
 .wrapper-booking-list {
   max-width: 450px;
-  max-height: 100%;
+  max-height: 600px;
   display: flex;
   flex-direction: column;
 }
 
 .empty-list {
-  height: 580px;
+  height: 540px;
   width: 305px;
   display: flex;
   justify-content: center;
@@ -416,7 +418,7 @@ watch(
 }
 
 .card-room-info {
-  max-width: 500px;
+  max-width: 650px;
   height: 100%;
 }
 
