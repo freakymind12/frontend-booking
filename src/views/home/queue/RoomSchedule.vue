@@ -6,11 +6,12 @@
           <CalendarTwoTone /> {{ roomStore.detailRoom?.room_name }}
         </span>
         <a-space size="small" align="center">
-          <a-date-picker v-model:value="selectedDate" style="width: 120px;" @change="handleChangeDate" />
+          <a-date-picker v-model:value="selectedDate" style="width: 120px;" @change="handleChangeDate" :disabledDate="disabledDate" />
         </a-space>
       </a-flex>
       <a-flex vertical gap="small" class="mb list-schedule">
-        <a-card size="small" v-for="(book, index) in bookingStore.bookings" :key="index">
+        <a-card size="small" v-for="(book, index) in bookingStore.bookings" :key="index" :hoverable="true"
+          class="card-booking">
           <span class="large bold"> {{ book.meeting_name }}</span>
           <a-flex align="center">
             <a-tag color="red" class="bold" style="font-size: 14px;">
@@ -25,8 +26,13 @@
         <a-empty class="empty" v-if="bookingStore.bookings.length === 0" description="There is no booking schedule" />
       </a-flex>
       <a-flex justify="center" align="center">
-        <a-button size="small" type="primary" @click="backToQueue()" style="background-color: #264d8e;">
-          <LeftCircleOutlined /> Back to queue
+        <a-button type="primary" @click="backToQueue()" style="background-color: #264d8e;">
+          <template #icon>
+            <LeftCircleOutlined style="font-size: medium;" />
+          </template>
+          <span>
+            Back to Queue
+          </span>
         </a-button>
       </a-flex>
 
@@ -63,6 +69,10 @@ const backToQueue = () => {
 const handleChangeDate = (date) => {
   bookingStore.getBookings({ id_room, date: date.format('YYYY-MM-DD') })
 }
+
+const disabledDate = (current) => {
+  return current && current < dayjs().startOf('day');
+}
 </script>
 
 <style scoped>
@@ -74,7 +84,7 @@ const handleChangeDate = (date) => {
 }
 
 .schedule {
-  width: 650px;
+  width: 900px;
   border: 1px solid #264d8e;
 }
 
@@ -95,12 +105,17 @@ const handleChangeDate = (date) => {
 }
 
 .list-schedule {
-  height: 350px;
+  height: 400px;
   overflow-y: auto;
   padding-right: 10px;
 }
 
 .empty {
   padding-top: 15%;
+}
+
+.card-booking {
+  border: 1px solid #797a7c65;
+  border-radius: 10px;
 }
 </style>
