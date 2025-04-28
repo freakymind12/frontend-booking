@@ -69,6 +69,10 @@ const router = createRouter({
     {
       path: '/queue/:idroom',
       component: () => import('@/views/home/queue/QueueRoom.vue')
+    },
+    {
+      path: '/queue/:idroom/schedule',
+      component: () => import ('@/views/home/queue/RoomSchedule.vue')
     }
   ]
 })

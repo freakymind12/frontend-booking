@@ -4,34 +4,43 @@
       <div class="room-info">
         <a-card class="card-room-info">
           <a-flex justify="center" align="center" gap="middle" style="margin-bottom: 1rem">
+
             <a-image :src="hrs" :height="70" :preview="false"></a-image>
             <span :class="{ 'logo-name': true, 'intro-active': isActive }">
               Meeting Room<br />
               Management
             </span>
           </a-flex>
-          <a-dropdown>
-            <h2 class="room-name">{{ roomData?.room_name }}</h2>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item
-                  v-for="room in roomList"
-                  :key="room.id_room"
-                  @click="handleChangeRoom(room.id_room)"
-                >
-                  {{ room?.room_name }}
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
+          <a-space size="small" align="center">
+            <a-dropdown>
+              <a-button type="primart" class="room-name" style="width: 570px;">{{ roomData?.room_name }}</a-button>
+              <!-- <h2 class="room-name">{{ roomData?.room_name }}</h2> -->
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item v-for="room in roomList" :key="room.id_room" @click="handleChangeRoom(room.id_room)">
+                    {{ room?.room_name }}
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+            <a-tooltip title="See Schedule">
+
+              <a-button type="primary" shape="circle" @click="goToSchedule" style="background-color: #264D8E;">
+                <CalendarOutlined />
+              </a-button>
+            </a-tooltip>
+          </a-space>
           <p style="padding-top: 5%">
             <UserOutlined /> Capacity : {{ roomData?.capacity.toLocaleString() }} persons
           </p>
-          <p><BankOutlined /> Description : {{ roomData?.description }}</p>
+          <p>
+            <BankOutlined /> Description : {{ roomData?.description }}
+          </p>
           <p v-if="ongoing">
             Ongoing :
-            <a-tag color="green"
-              ><template #icon> <FormOutlined /> </template>
+            <a-tag color="green"><template #icon>
+                <FormOutlined />
+              </template>
               {{ ongoing.meeting_name }}
             </a-tag>
             <span v-if="ongoing.status == 'Present'">
@@ -49,7 +58,9 @@
           <p v-if="upcoming">
             Upcoming :
             <a-tag color="green">
-              <template #icon> <FormOutlined /> </template>{{ upcoming.meeting_name }}
+              <template #icon>
+                <FormOutlined />
+              </template>{{ upcoming.meeting_name }}
             </a-tag>
           </p>
           <p v-else>
@@ -60,31 +71,29 @@
             </a-tag>
           </p>
           <!-- Button Present or Cancel -->
-          <a-flex align="center" justify="center" gap="middle" style="padding-top: 2%" v-if="ongoing && ongoing.status == null || ongoing == null">
-            <a-button
-              class="button-meeting"
-              size="large"
-              type="primary"
-              :disabled="buttonState"
-              @click="updateMeetingStatus(ongoing, 'Present')"
-              ><CheckCircleOutlined /> Present
+          <a-flex align="center" justify="center" gap="middle" style="padding-top: 2%"
+            v-if="ongoing && ongoing.status == null || ongoing == null">
+            <a-button class="button-meeting" size="large" type="primary" :disabled="buttonState"
+              @click="updateMeetingStatus(ongoing, 'Present')">
+              <CheckCircleOutlined /> Present
             </a-button>
-            <a-button
-              class="button-meeting"
-              type="primary"
-              size="large"
-              danger
-              :disabled="buttonState"
-              @click="updateMeetingStatus(ongoing, 'Cancel')"
-              ><CloseCircleOutlined /> Cancel
+            <a-button class="button-meeting" type="primary" size="large" danger :disabled="buttonState"
+              @click="updateMeetingStatus(ongoing, 'Cancel')">
+              <CloseCircleOutlined /> Cancel
             </a-button>
           </a-flex>
-          <a-flex align="center" justify="center" style="padding-top:2%" v-if="ongoing != null && ongoing.status == 'Present'">
-            <a-button block class="button-meeting" size="large" type="primary" style="background-color: #389e0d; color: white;">Meeting is ongoing</a-button>
+          <a-flex align="center" justify="center" style="padding-top:2%"
+            v-if="ongoing != null && ongoing.status == 'Present'">
+            <a-button block class="button-meeting" size="large" type="primary"
+              style="background-color: #389e0d; color: white;">Meeting is ongoing</a-button>
           </a-flex>
           <template #actions>
-            <p><CalendarOutlined /> {{ currentTime[0] }}</p>
-            <p><ClockCircleOutlined /> {{ currentTime[1] }}</p>
+            <p>
+              <CalendarOutlined /> {{ currentTime[0] }}
+            </p>
+            <p>
+              <ClockCircleOutlined /> {{ currentTime[1] }}
+            </p>
           </template>
         </a-card>
       </div>
@@ -98,21 +107,20 @@
         <div class="list">
           <a-card class="card-list" v-for="booking in bookings" :key="booking.id_booking" hoverable>
             <a-flex gap="small" vertical style="margin-bottom: 0.5rem">
-              <a-tag color="red"
-                ><template #icon> <UserOutlined /> </template>{{ booking.username }}</a-tag
-              >
+              <a-tag color="red"><template #icon>
+                  <UserOutlined />
+                </template>{{ booking.username }}</a-tag>
               <a-tag color="green">
-                <template #icon> <FormOutlined /> </template>{{ booking.meeting_name }}</a-tag
-              >
+                <template #icon>
+                  <FormOutlined />
+                </template>{{ booking.meeting_name }}</a-tag>
               <a-tag color="#8967B3">
                 <template #icon>
                   <ClockCircleOutlined />
                 </template>
                 {{ booking.start.split(' ')[1].slice(0, 5) }} -
-                {{ booking.end.split(' ')[1].slice(0, 5) }}</a-tag
-              >
-              <a-tag color="blue" v-if="isPassed(booking)"
-                ><template #icon>
+                {{ booking.end.split(' ')[1].slice(0, 5) }}</a-tag>
+              <a-tag color="blue" v-if="isPassed(booking)"><template #icon>
                   <CheckCircleOutlined />
                 </template>
                 Finished
@@ -205,7 +213,7 @@ const fetchBookingList = async (room) => {
 
   try {
     const response = await axios.get(
-      `http://192.168.148.201:5050/bookings/queue?id_room=${room}&date=${formattedDate}`
+      `http://192.168.148.125:5050/bookings/queue?id_room=${room}&date=${formattedDate}`
     )
     bookings.value = response.data.data
   } catch (error) {
@@ -219,7 +227,7 @@ const updateClock = () => {
 
 const fetchRoom = async (room) => {
   try {
-    const response = await axios.get(`http://192.168.148.201:5050/rooms/${room}`)
+    const response = await axios.get(`http://192.168.148.125:5050/rooms/${room}`)
     roomData.value = response.data.data[0]
   } catch (error) {
     console.error(error)
@@ -277,7 +285,7 @@ const updateButtonValidate = (data) => {
 const updateMeetingStatus = async (data, status) => {
   try {
     if (status == 'Present') {
-      await axios.patch(`http://192.168.148.201:5050/bookings/${data.id_booking}`, {
+      await axios.patch(`http://192.168.148.125:5050/bookings/${data.id_booking}`, {
         status: status,
         id_room: data.id_room,
         meeting_name: data.meeting_name,
@@ -286,7 +294,7 @@ const updateMeetingStatus = async (data, status) => {
       })
       message.success('Present success')
     } else if (status == 'Cancel') {
-      await axios.delete(`http://192.168.148.201:5050/bookings/${data.id_booking}`)
+      await axios.delete(`http://192.168.148.125:5050/bookings/${data.id_booking}`)
       message.error('Meeting has been canceled')
     }
   } catch (error) {
@@ -296,7 +304,7 @@ const updateMeetingStatus = async (data, status) => {
 
 const fetchAllRoom = async () => {
   try {
-    const response = await axios.get(`http://192.168.148.201:5050/rooms`)
+    const response = await axios.get(`http://192.168.148.125:5050/rooms`)
     roomList.value = response.data.data
   } catch (error) {
     console.error(error)
@@ -305,6 +313,10 @@ const fetchAllRoom = async () => {
 
 const handleChangeRoom = (roomId) => {
   router.push(`/queue/${roomId}`)
+}
+
+const goToSchedule = () => {
+  router.push(`/queue/${idroom}/schedule`)
 }
 
 onMounted(() => {
@@ -412,8 +424,9 @@ watch(
 }
 
 .card-list .ant-tag {
-  white-space: normal; 
-  overflow-wrap: break-word; /* Memastikan kata panjang dibungkus dengan baik */
+  white-space: normal;
+  overflow-wrap: break-word;
+  /* Memastikan kata panjang dibungkus dengan baik */
   word-break: break-word;
 }
 
@@ -439,28 +452,27 @@ watch(
   margin-bottom: 0px;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
-  opacity: 0; /* Start with hidden */
-  transform: scale(0.8); /* Mulai dengan ukuran lebih kecil */
+  opacity: 0;
+  /* Start with hidden */
+  transform: scale(0.8);
+  /* Mulai dengan ukuran lebih kecil */
   transition:
     opacity 0.8s ease-out,
     transform 0.8s ease-out;
 }
 
 .logo-name.intro-active {
-  opacity: 1; /* Setelah kelas ditambahkan, elemen terlihat */
-  transform: scale(1); /* Kembali ke ukuran normal */
-}
-
-.room-name:hover {
-  cursor: pointer;
-  background-color: #264d8e;
+  opacity: 1;
+  /* Setelah kelas ditambahkan, elemen terlihat */
+  transform: scale(1);
+  /* Kembali ke ukuran normal */
 }
 
 .room-name {
-  text-align: center;
-  border-radius: 30px;
   color: white;
   background-color: #264d8e;
+  font-weight: bold;
+  font-size: medium
 }
 
 .button-meeting {
