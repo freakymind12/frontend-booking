@@ -15,7 +15,7 @@ export const useBookingsStore = defineStore("bookings", {
           }, new URLSearchParams()),
         )
 
-        const response = await axios.get(`http://192.168.148.125:5050/bookings/queue?${queryParams}`)
+        const response = await axios.get(`http://192.168.148.201:5050/bookings/queue?${queryParams}`)
         if (response.status === 200) {
           this.bookings = response.data.data
         }

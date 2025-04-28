@@ -7,7 +7,6 @@
         </span>
         <a-space size="small" align="center">
           <a-date-picker v-model:value="selectedDate" style="width: 120px;" @change="handleChangeDate" />
-
         </a-space>
       </a-flex>
       <a-flex vertical gap="small" class="mb list-schedule">
