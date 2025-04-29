@@ -1,6 +1,6 @@
 <template>
   <a-col :span="10">
-    <a-row gutter="24" class="scrollable-column">
+    <a-row :gutter="[16,16]" class="scrollable-column">
       <a-col :span="24" v-if="rooms.length === 0">
         <a-card class="empty-card">
           <a-empty description="No Room Data" />

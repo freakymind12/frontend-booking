@@ -1,6 +1,6 @@
 <template>
   <div class="features">
-    <a-row gutter="24">
+    <a-row :gutter="[16,16]">
       <a-col span="24">
         <a-card>
           <h2 class="header-card"><ClockCircleTwoTone /> Realtime Queue Management</h2>

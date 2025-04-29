@@ -2,7 +2,7 @@
   <!-- <a-col :span="6"> -->
   <div class="wrapper-room-list">
     <h2>Room List</h2>
-    <a-row gutter="24" class="scrollable-column">
+    <a-row :gutter="[16,16]" class="scrollable-column">
       <a-col :span="24" v-if="rooms.length === 0">
         <div class="empty-card">
           <a-empty description="No Room Data" />

@@ -45,7 +45,6 @@
     </a-timeline>
     <div class="empty-list">
       <a-empty
-        :image="simpleImage"
         v-if="bookingList.length == 0"
         description="Booking list empty"
       />
@@ -131,9 +130,7 @@ watch(
   }
 )
 
-watch(() => {
-  fetchBookingList()
-})
+
 
 onMounted(async () => {
   await getUserData()

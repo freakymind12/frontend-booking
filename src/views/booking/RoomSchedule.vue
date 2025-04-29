@@ -14,33 +14,31 @@
               {{ item.username }}
             </a-tag>
             <a-tag color="pink">
-              <template #icon> <bank-outlined /></template>{{ item.dept }}</a-tag
-            >
+              <template #icon> <bank-outlined /></template>{{ item.dept }}</a-tag>
             <a-tag color="cyan">
-              <template #icon> <clock-circle-outlined /> </template
-              >{{ calculateDuration(item.start, item.end) }} min</a-tag
-            >
+              <template #icon> <clock-circle-outlined /> </template>{{ calculateDuration(item.start, item.end) }}
+              min</a-tag>
           </div>
           <div>
-            <a-tag color="green"
-              ><form-outlined /> {{ item.meeting_name }}</a-tag
-            >
+            <a-tag color="green"><form-outlined /> {{ item.meeting_name }}</a-tag>
           </div>
           <div>
-            <a-tag color="purple"
-              ><EnvironmentOutlined /> {{ item.room_name }}</a-tag
-            >
-            <a-tag color="#108ee9"
-              >Time : {{ item.start.split(' ')[1].slice(0, 5) }} -
-              {{ item.end.split(' ')[1].slice(0, 5) }}</a-tag
-            >
+            <a-tag color="purple">
+              <EnvironmentOutlined /> {{ item.room_name }}
+            </a-tag>
+            <a-tag color="#108ee9">Time : {{ item.start.split(' ')[1].slice(0, 5) }} -
+              {{ item.end.split(' ')[1].slice(0, 5) }}</a-tag>
           </div>
         </a-space>
-        <a-tag color="red"><DeleteOutlined/> Delete</a-tag>
+        <a-popconfirm title="Are you sure delete this meeting schedule ?" @confirm="handleDelete(item.id_booking)">
+          <a-tag class="delete-button" color="#FF0B55" v-if="user.role == 'admin'">
+            <DeleteOutlined /> Delete
+          </a-tag>
+        </a-popconfirm>
       </a-timeline-item>
     </a-timeline>
     <div class="empty-list" v-if="bookingList.length == 0">
-      <a-empty :image="simpleImage" description="There is no schedule" />
+      <a-empty description="There is no schedule" />
     </div>
   </a-card>
   <!-- </a-col> -->
@@ -49,6 +47,7 @@
 <script setup>
 import axios from 'axios'
 import { onMounted, ref, watch } from 'vue'
+import auth from '@/auth/auth'
 import dayjs from 'dayjs'
 import {
   ClockCircleOutlined,
@@ -58,8 +57,10 @@ import {
   UserOutlined,
   DeleteOutlined
 } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 
 const bookingList = ref([])
+const user = ref()
 const props = defineProps({
   room: Object,
   refreshKey: Number
@@ -75,6 +76,24 @@ const fetchBookingList = async () => {
       `http://192.168.148.201:5050/bookings/queue?id_room=${props.room.id_room}&date=${formattedDate}`
     )
     bookingList.value = response.data.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getUserData = async () => {
+  try {
+    user.value = await auth.checkRoles()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const handleDelete = async (id) => {
+  try {
+    await axios.delete(`http://192.168.148.201:5050/bookings/${id}`)
+    message.success('Delete booking successfully')
+    fetchBookingList()
   } catch (error) {
     console.error(error)
   }
@@ -96,7 +115,12 @@ const calculateDuration = (startDateTime, endDateTime) => {
 // Watch for changes in room, refreshKey, or selectedDate
 watch([() => props.room, () => props.refreshKey, () => selectedDate.value], fetchBookingList)
 
-onMounted(fetchBookingList)
+onMounted(async () => {
+  await fetchBookingList()
+  await getUserData()
+
+  console.log(user.value)
+})
 </script>
 
 <style scoped>
@@ -114,7 +138,8 @@ onMounted(fetchBookingList)
 }
 
 .booking-card::-webkit-scrollbar {
-  display: none; /* Menyembunyikan scrollbar */
+  display: none;
+  /* Menyembunyikan scrollbar */
 }
 
 .empty-list {
@@ -125,8 +150,13 @@ onMounted(fetchBookingList)
 }
 
 .ant-tag {
-  font-size:14px;
-  white-space:normal;
+  font-size: 14px;
+  white-space: normal;
   word-wrap: break-word;
+}
+
+.delete-button:hover {
+  transform: scale(1.02);
+  cursor: pointer;
 }
 </style>
