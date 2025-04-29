@@ -6,7 +6,8 @@
           <CalendarTwoTone /> {{ roomStore.detailRoom?.room_name }}
         </span>
         <a-space size="small" align="center">
-          <a-date-picker v-model:value="selectedDate" style="width: 120px;" @change="handleChangeDate" :disabledDate="disabledDate" />
+          <a-date-picker v-model:value="selectedDate" style="width: 120px;" @change="handleChangeDate"
+            :disabledDate="disabledDate" />
         </a-space>
       </a-flex>
       <a-flex vertical gap="small" class="mb list-schedule">
@@ -20,6 +21,11 @@
             <a-tag color="#8967B3" style="font-size: 14px;">
               <ClockCircleOutlined /> {{ book.start.split(' ')[1].slice(0, 5) }} - {{ book.end.split(' ')[1].slice(0, 5)
               }}
+            </a-tag>
+            <a-tag :color="book.status ? 'blue' : 'volcano'" style="font-size: 14px;">
+              <CheckCircleOutlined v-if="book.status" />
+
+              {{ book.status ? 'Finished' : 'Upcoming' }}
             </a-tag>
           </a-flex>
         </a-card>
@@ -45,7 +51,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useBookingsStore } from '@/stores/bookings'
 import { useRoomStore } from '@/stores/rooms';
 import { onMounted, ref } from 'vue'
-import { LeftCircleOutlined, CalendarTwoTone, UserOutlined, ClockCircleOutlined } from '@ant-design/icons-vue';
+import { LeftCircleOutlined, CalendarTwoTone, UserOutlined, ClockCircleOutlined, CheckCircleOutlined } from '@ant-design/icons-vue';
 import dayjs from 'dayjs'
 
 
@@ -60,14 +66,15 @@ let id_room = route.params.idroom
 onMounted(async () => {
   await bookingStore.getBookings({ id_room, date: selectedDate.value.format('YYYY-MM-DD') })
   await roomStore.getDetailRoom(id_room)
+  console.log(bookingStore.bookings)
 })
 
 const backToQueue = () => {
   router.push(`/queue/${id_room}`)
 }
 
-const handleChangeDate = (date) => {
-  bookingStore.getBookings({ id_room, date: date.format('YYYY-MM-DD') })
+const handleChangeDate = async (date) => {
+  await bookingStore.getBookings({ id_room, date: date.format('YYYY-MM-DD') })
 }
 
 const disabledDate = (current) => {

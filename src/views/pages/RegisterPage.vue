@@ -43,6 +43,7 @@
             <a-select-option value="PM">PM</a-select-option>
             <a-select-option value="AL">AL</a-select-option>
             <a-select-option value="PGA">PGA</a-select-option>
+            <a-select-option value="FINANCE">FINANCE</a-select-option>
             <a-select-option value="PUR">PUR</a-select-option>
             <a-select-option value="KAIZEN">KAIZEN</a-select-option>
             <a-select-option value="PC">PC</a-select-option>

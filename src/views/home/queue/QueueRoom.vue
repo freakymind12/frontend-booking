@@ -10,9 +10,9 @@
               Management
             </span>
           </a-flex>
-          <a-space size="small" align="center">
+          <a-space size="small" >
             <a-dropdown>
-              <a-button type="primart" class="room-name" style="width: 570px;">{{ roomData?.room_name }}</a-button>
+              <a-button size="large" type="primary" class="room-name" style="width: 570px;" shape="round">{{ roomData?.room_name }}</a-button>
               <!-- <h2 class="room-name">{{ roomData?.room_name }}</h2> -->
               <template #overlay>
                 <a-menu>
@@ -24,7 +24,7 @@
             </a-dropdown>
             <a-tooltip title="See Schedule">
 
-              <a-button type="primary" shape="circle" @click="goToSchedule" style="background-color: #264D8E;">
+              <a-button type="primary" shape="circle" size="large" @click="goToSchedule" style="background-color: #264D8E;">
                 <CalendarOutlined />
               </a-button>
             </a-tooltip>
@@ -471,7 +471,11 @@ watch(
   color: white;
   background-color: #264d8e;
   font-weight: bold;
-  font-size: medium
+  font-size: large
+}
+
+.room-name:hover {
+  background-color: #345ea5;
 }
 
 .button-meeting {
@@ -486,4 +490,6 @@ watch(
   font-size: 20px;
   font-weight: bold;
 }
+
+
 </style>

@@ -6,10 +6,10 @@
         <a-select
           ref="select"
           v-model:value="selectValue"
-          style="width: 100px"
+          style="width: 150px"
           :options="dept"
           @change="handleChange"
-        ></a-select>
+        />
       </a-flex>
       <a-flex class="user-list" vertical>
         <a-card class="user-card" v-for="user in filteredUsers" :key="user.id_user">
@@ -84,7 +84,8 @@ const dept = [
   { label: 'PUR', value: 'PUR' },
   { label: 'KAIZEN', value: 'KAIZEN' },
   { label: 'PC', value: 'PC' },
-  { label: 'QC', value: 'QC' }
+  { label: 'QC', value: 'QC' },
+  { label: 'FINANCE', value: 'FINANCE' },
 ]
 const userList = ref([])
 

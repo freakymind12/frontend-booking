@@ -7,7 +7,7 @@
     </a-flex>
     <a-timeline>
       <a-timeline-item v-for="item in bookingList" :key="item.id_booking">
-        <a-space direction="vertical">
+        <a-space direction="vertical" style="margin-bottom: 8px;">
           <div>
             <a-tag color="red">
               <template #icon><user-outlined /></template>
@@ -36,6 +36,7 @@
             >
           </div>
         </a-space>
+        <a-tag color="red"><DeleteOutlined/> Delete</a-tag>
       </a-timeline-item>
     </a-timeline>
     <div class="empty-list" v-if="bookingList.length == 0">
@@ -54,7 +55,8 @@ import {
   BankOutlined,
   FormOutlined,
   EnvironmentOutlined,
-  UserOutlined
+  UserOutlined,
+  DeleteOutlined
 } from '@ant-design/icons-vue'
 
 const bookingList = ref([])
