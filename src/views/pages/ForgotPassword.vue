@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, onUnmounted, onMounted } from 'vue'
+import { ref, onUnmounted, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { LeftCircleOutlined } from '@ant-design/icons-vue'
@@ -64,7 +64,6 @@ const handleAction = async () => {
 
   if (response.code == 200) {
     message.value = `Success sent email for recover your password, check your email or spam folder`
-    startCooldown()
   } else {
     message.value = response.message
   }
@@ -72,15 +71,12 @@ const handleAction = async () => {
   alertCode.value = response.code
 }
 
-const startCooldown = () => {
-  const expiresAt = dayjs().add(3, 'minute') // atau 300 detik
-  authStore.cooldownForgotPassword = expiresAt.toISOString()
-}
-
 const updateCooldownFromStore = () => {
   const target = dayjs(authStore.cooldownForgotPassword)
   const remaining = target.diff(dayjs(), 'second')
-
+  console.log(authStore.cooldownForgotPassword)
+  console.log(target)
+  console.log(remaining)
   if (remaining > 0) {
     cooldown.value = remaining
     timerInterval = setInterval(() => {
@@ -95,9 +91,15 @@ const updateCooldownFromStore = () => {
   }
 }
 
-onMounted(() => {
-  updateCooldownFromStore()
-})
+watch(
+  () => authStore.cooldownForgotPassword,
+  () => {
+    updateCooldownFromStore()
+  },
+  {
+    immediate: true
+  }
+)
 
 onUnmounted(() => {
   clearInterval(timerInterval)

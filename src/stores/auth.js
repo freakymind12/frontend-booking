@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
 import router from '@/router'
+import dayjs from 'dayjs'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export const useAuthStore = defineStore('auth', {
@@ -9,7 +10,7 @@ export const useAuthStore = defineStore('auth', {
     user: JSON.parse(localStorage.getItem('user')) || null,
     isAuthenticated: !!localStorage.getItem('isLoggedIn'),
     accessToken: !!localStorage.getItem('accessToken'),
-    cooldownForgotPassword: null,
+    cooldownForgotPassword: localStorage.getItem('cooldownForgotPassword') || null
   }),
 
   actions: {
@@ -30,6 +31,12 @@ export const useAuthStore = defineStore('auth', {
     async forgotPassword(data) {
       try {
         const response = await axios.post(API_BASE_URL + `/auth/forgot-password`, data)
+
+        if (response.status === 200) {
+          this.cooldownForgotPassword = dayjs().add(3, 'minute')
+          localStorage.setItem('cooldownForgotPassword', this.cooldownForgotPassword.toISOString())
+        }
+
         return response.data
       } catch (error) {
         console.error('Failed to send forgot password email:', error)
@@ -98,10 +105,6 @@ export const useAuthStore = defineStore('auth', {
     setIsAuthenticated(value) {
       this.isAuthenticated = value
     },
-  },
 
-  persist: {
-    paths: ['cooldownForgotPassword'],
-    storage: localStorage
-  }
+  },
 })
