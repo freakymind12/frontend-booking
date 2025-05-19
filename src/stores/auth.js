@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import router from '../router'
 import { message } from 'ant-design-vue'
+import router from '@/router'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -11,41 +12,71 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   actions: {
+    //RecoverPassword
+    async recoveryPassword(data) {
+      try {
+        const { password, ...payload } = data
+        const queryParams = new URLSearchParams(payload).toString()
+        const response = await axios.post(API_BASE_URL + `/auth/recovery-password?${queryParams}`, { password })
+        return response.data
+      } catch (error) {
+        console.error('Failed to recover your password:', error)
+        return error.response.data
+      }
+    },
+
+    // forgetPassword
+    async forgotPassword(data) {
+      try {
+        const response = await axios.post(API_BASE_URL + `/auth/forgot-password`, data)
+        return response.data
+      } catch (error) {
+        console.error('Failed to send forgot password email:', error)
+        return error.response.data
+      }
+    },
+
     // Login user
     async login(email, password) {
       try {
         const response = await axios.post(
-          import.meta.env.VITE_API_BASE_URL + '/auth/login',
-          {
-            email,
-            password,
-          },
-          {
-            withCredentials: true,
-          },
-        )
+          `${API_BASE_URL}/auth/login`,
+          { email, password },
+          { withCredentials: true }
+        );
 
-        this.user = response.data.data
-        this.isAuthenticated = true
-        this.accessToken = response.data.data.access_token
+        const userData = response.data?.data;
+
+        if (!userData?.access_token) {
+          throw new Error('Invalid login response: access token missing');
+        }
+
+        // Update state
+        this.user = userData;
+        this.isAuthenticated = true;
+        this.accessToken = userData.access_token;
 
         // Simpan data di localStorage
-        localStorage.setItem('isLoggedIn', 'true')
-        localStorage.setItem('user', JSON.stringify(this.user))
-        localStorage.setItem('accessToken', this.accessToken)
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('user', JSON.stringify(this.user));
+        localStorage.setItem('accessToken', this.accessToken);
 
-        router.push('/dashboard')
+        // Redirect to dashboard
+        router.push('/dashboard');
+
       } catch (error) {
-        message.error(error.response.data.message)
-        console.error('Login failed:', error)
+        const messageText = error.response?.data?.message || error.message || 'Login failed';
+        message.error(messageText);
+        console.error('Login failed:', error);
       }
     },
+
 
     // Logout user
     async logout() {
       try {
         await axios.post(
-          import.meta.env.VITE_API_BASE_URL + '/auth/logout',
+          API_BASE_URL + '/auth/logout',
           {},
           { withCredentials: true },
         )
