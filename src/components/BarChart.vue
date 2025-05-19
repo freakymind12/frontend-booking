@@ -1,5 +1,13 @@
 <template>
-  <v-chart :style="{ height: props.height }" :option="options" autoresize />
+  <v-chart
+    :style="{ height: props.height }"
+    :option="options"
+    autoresize
+    v-if="props.yAxisData[0].length > 0"
+  />
+  <a-flex justify="center" align="center" v-else :style="{ height: props.height }">
+    <a-empty description="There is no data to show" />
+  </a-flex>
 </template>
 
 <script setup>
@@ -145,6 +153,7 @@ const options = ref({
 watch(
   () => props.yAxisData,
   (newData) => {
+    console.log(props.yAxisData)
     options.value.xAxis.data = props.xAxisData
     options.value.series[0].data = newData[0]
     options.value.series[1].data = newData[1]
