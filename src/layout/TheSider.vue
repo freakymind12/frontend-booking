@@ -15,16 +15,20 @@
       <div class="menu-container">
         <a-menu theme="dark" mode="inline" class="menu-style">
           <template v-for="item in menuItems">
-            <a-menu-item v-if="!item.children" :key="item.key" :to="item.path" custom>
+            <a-menu-item
+              v-if="!item.children && item.role.includes(authStore.user?.role)"
+              :key="item.key"
+              :to="item.path"
+              custom
+            >
               <router-link :to="item.path" style="display: flex; align-items: center">
                 <component :is="item.icon" />
                 <span>{{ item.title }} </span>
               </router-link>
             </a-menu-item>
-            <!-- v-if="item.role.includes(authStore.user.role)" -->
 
             <template v-else>
-              <a-sub-menu :key="item.key">
+              <a-sub-menu :key="item.key" v-if="item.role.includes(authStore.user?.role)">
                 <template #title>
                   <component :is="item.icon" />
                   <span>{{ item.title }}</span>
@@ -63,14 +67,16 @@ import {
   ExperimentTwoTone,
   ControlOutlined,
   DatabaseOutlined,
+  ScheduleOutlined,
 } from '@ant-design/icons-vue'
 import SiderMenu from './sider.js'
 import { useSiderStore } from '@/stores/sidebar.js'
 import hrs from '../assets/images/hrs.png'
-// import { useAuthStore } from '@/stores/auth.js'
+import { useAuthStore } from '@/stores/auth.js'
 
 // auth store untuk hidden menu sesuai role yang login
-// const authStore = useAuthStore()
+const authStore = useAuthStore()
+
 
 // Menerjemahkan nama icon dari string ke komponen icon
 const iconMap = {
@@ -79,6 +85,7 @@ const iconMap = {
   DatabaseTwoTone,
   FileTwoTone,
   ScheduleTwoTone,
+  ScheduleOutlined,
   ExperimentTwoTone,
   FileOutlined,
   ControlOutlined,

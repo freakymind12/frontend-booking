@@ -2,31 +2,23 @@ export default [
   {
     key: '1',
     icon: 'DashboardOutlined',
-    title: 'Dashboard',
+    title: 'Home',
     path: '/dashboard',
-    children: [
-      {
-        key: '1-1',
-        title: 'Live Dashboard',
-        path: '/dashboard',
-      },
-      {
-        key: '1-2',
-        title: 'Heatmap',
-        path: '/heatmap',
-      },
-    ],
+    role: ['admin', 'staff', 'viewer'],
+    // children: []
   },
   {
     key: '2',
-    icon: 'FileOutlined',
-    title: 'Report',
-    path: '/report',
+    icon: 'ScheduleOutlined',
+    title: 'Booking',
+    path: '/booking',
+    role: ['admin', 'staff', 'viewer'],
   },
   {
     key: '3',
     icon: 'DatabaseOutlined',
-    title: 'Master Data',
-    path: '/master-data',
+    title: 'Admin',
+    path: '/admin',
+    role: ['admin'],
   },
 ]

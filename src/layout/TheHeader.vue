@@ -124,7 +124,7 @@ const toggleSider = () => {
 .header {
   padding-left: 20px;
   padding-right: 20px;
-  background-color: #fff;
+  background-color: #ffffff;
   color: black;
   border-bottom: 1px solid #ccc;
 }

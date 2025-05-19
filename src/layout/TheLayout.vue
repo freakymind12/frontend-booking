@@ -34,7 +34,8 @@ import TheDrawer from './TheDrawer.vue'
   padding: 24px;
   overflow-y: auto;
   overflow-x: hidden;
-  height: calc(100vh - 64px);
+  height: calc(100dvh - 64px);
+
 }
 
 .content-scroll::-webkit-scrollbar {
