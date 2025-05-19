@@ -15,7 +15,7 @@ app.use(Antd)
 app.use(pinia)
 app.use(router)
 router.beforeEach((to, from, next) => {
-  const mainTitle = 'RDZ-TH Dashboard'
+  const mainTitle = 'Meeting Room Management'
   document.title = `${to.meta.breadcrumb || to.name} - ${mainTitle}`
   next()
 })

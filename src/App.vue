@@ -8,7 +8,7 @@
 const theme = {
   token: {
     fontFamily: 'Nunito, Arial',
-    colorPrimary: '#1F5781',
+    colorPrimary: '#264d8e',
   },
 }
 </script>
