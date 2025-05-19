@@ -15,20 +15,58 @@ const router = createRouter({
         {
           path: '/dashboard',
           name: 'Dashboard',
-          component: () => import('@/views/dashboard/Dashboard.vue'),
+          component: () => import('@/views/dashboard/HomeDashboard.vue'),
           meta: {
             breadcrumb: 'Dashboard',
+            requiresAuth: true,
+            roles: ['admin', 'staff', 'viewer'],
           },
         },
         {
-          path: '/:pathMatch(.*)*',
-          name: 'NotFound',
-          component: () => import('@/views/pages/NotFound.vue'),
+          path: '/booking',
+          name: 'Booking',
+          component: () => import('@/views/booking/TheBooking.vue'),
           meta: {
-            breadcrumb: 'Not Found',
+            breadcrumb: 'Booking',
+            requiresAuth: true,
+            roles: ['admin', 'staff', 'viewer'],
+          },
+        },
+        {
+          path: '/admin',
+          name: 'Admin',
+          component: () => import('@/views/admin/TheAdmin.vue'),
+          meta: {
+            breadcrumb: 'Admin',
+            requiresAuth: true,
+            roles: ['admin'],
           },
         },
       ],
+    },
+    {
+      path: '/recover-password',
+      name: 'Recover Password',
+      component: () => import('@/views/pages/RecoverPassword.vue'),
+      beforeEnter: (to, from, next) => {
+        const { iv, data } = to.query
+
+        if (iv && data) {
+          next() // OK, lanjut ke halaman
+        } else {
+          next({ name: 'NotFound' }) // Atau redirect ke halaman lain
+        }
+      }
+    },
+    {
+      path: '/queue/:id_room',
+      name: 'Queue',
+      component: () => import('@/views/tablet/TheTablet.vue'),
+    },
+    {
+      path: '/queue/:id_room/schedule',
+      name: 'Schedule Info',
+      component: () => import('@/views/tablet/ScheduleInfo.vue'),
     },
     {
       path: '/register',
@@ -39,6 +77,16 @@ const router = createRouter({
       path: '/login',
       name: 'Login',
       component: () => import('@/views/pages/LoginPage.vue'),
+    },
+    {
+      path: '/forgot-password',
+      name: 'Forgot Password',
+      component: () => import('@/views/pages/ForgotPassword.vue'),
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('@/views/pages/NotFound.vue'),
     },
   ],
 })
