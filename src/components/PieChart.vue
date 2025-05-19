@@ -1,6 +1,14 @@
 <template>
   <a-card size="small" :hoverable="true">
-    <v-chart :style="{ height: props.height }" :option="option" autoresize />
+    <v-chart
+      :style="{ height: props.height }"
+      :option="option"
+      autoresize
+      v-if="props.data.length > 0"
+    />
+    <a-flex justify="center" align="center" v-else :style="{ height: props.height }">
+      <a-empty description="There is no data to show"/>
+    </a-flex>
   </a-card>
 </template>
 
