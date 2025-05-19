@@ -13,7 +13,7 @@
         </a-flex>
       </template>
       <template #extra>
-        <a-button type="primary" @click="router.push('/')" size="large">Back Home</a-button>
+        <a-button type="primary" @click="router.back()" size="large">Back to previous</a-button>
       </template>
     </a-result>
   </a-flex>

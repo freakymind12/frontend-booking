@@ -8,19 +8,13 @@
         <a-flex justify="center" align="center" gap="large" class="logo-img">
           <a-image :src="hrs" :width="100" :preview="false" />
           <h2 :class="{ 'logo-name': true, 'intro-active': isActive }">
-            PLATING<br />
-            IOT PORTAL
+            Meeting Room<br />
+            Management
           </h2>
         </a-flex>
-        <p style="font-size: 1rem; color: gray; margin-bottom: 0px">
-          Login with your account
-        </p>
+        <p style="font-size: 1rem; color: gray; margin-bottom: 0px">Login with your account</p>
       </a-flex>
-      <a-form
-        :model="form"
-        @finish="auth.login(form.email, form.password)"
-        layout="vertical"
-      >
+      <a-form :model="form" @finish="auth.login(form.email, form.password)" layout="vertical">
         <a-form-item
           label="Email"
           name="email"
@@ -34,10 +28,7 @@
           name="password"
           :rules="[{ required: true, message: 'Please input your password!' }]"
         >
-          <a-input-password
-            v-model:value="form.password"
-            placeholder="Password"
-          />
+          <a-input-password v-model:value="form.password" placeholder="Password" />
         </a-form-item>
         <a-form-item>
           <a-button
@@ -50,10 +41,18 @@
           </a-button>
         </a-form-item>
       </a-form>
-      <p align="center" style="color: gray">
-        Don't have an account ?
-        <router-link to="/register" class="ant-link"> Sign up</router-link>
-      </p>
+      <a-flex justify="center" align="center" :gap="10">
+        <a-tooltip title="Register">
+
+        <UserAddOutlined @click="router.push('/register')" class="bold large icon-login" />
+        </a-tooltip>
+        <a-tooltip title="Tablet Queue">
+        <TabletOutlined @click="toQueue" class="bold large icon-login"/>
+        </a-tooltip>
+        <a-tooltip title="Forgot Password">
+          <LockOutlined @click="router.push('/forgot-password')" class="bold large icon-login" />
+        </a-tooltip>
+      </a-flex>
     </a-card>
   </a-flex>
 </template>
@@ -63,7 +62,12 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import hrs from '@/assets/images/hrs.png'
 import TranslateGoogle from '@/components/TranslateGoogle.vue'
 import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+import { useRoomStore } from '@/stores/room'
+import { TabletOutlined, UserAddOutlined, LockOutlined } from '@ant-design/icons-vue'
 
+const roomStore = useRoomStore()
+const router = useRouter()
 const auth = useAuthStore()
 const form = ref({
   email: '',
@@ -72,6 +76,13 @@ const form = ref({
 
 // Variable untuk mengatur status animasi
 const isActive = ref(false)
+
+const toQueue = async () => {
+  await roomStore.get()
+  router.push(`/queue/${roomStore.rooms[0].id_room}`)
+}
+
+
 
 onMounted(() => {
   // Set `isActive` menjadi true setelah mount untuk memicu animasi
@@ -106,7 +117,7 @@ onUnmounted(() => {
 }
 
 .ant-link {
-  color: #000000;
+  color: grey;
   text-decoration: none;
   font-weight: 600;
 }
@@ -132,5 +143,15 @@ onUnmounted(() => {
 
 .logo-img:hover {
   cursor: pointer;
+}
+
+.icon-login {
+  border-radius: 50%;
+  padding: 10px;
+  background-color: #f0f2f5;
+}
+
+.icon-login:hover {
+  background-color: #e6e6e6;
 }
 </style>

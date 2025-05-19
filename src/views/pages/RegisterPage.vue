@@ -8,8 +8,8 @@
         <a-flex justify="center" align="center" gap="large">
           <a-image :src="hrs" :width="100" :preview="false" />
           <h2 :class="{ 'logo-name': true, 'intro-active': isActive }">
-            PLATING<br />
-            IOT PORTAL
+            Meeting Room<br />
+            Management
           </h2>
         </a-flex>
         <p style="font-size: 1rem; color: gray; margin-bottom: 0px">
@@ -34,14 +34,29 @@
         </a-form-item>
 
         <a-form-item
+          label="Department"
+          name="dept"
+          :rules="[{ required: true, message: 'Please select your department' }]"
+        >
+          <a-select v-model:value="form.dept" placeholder="Department">
+            <a-select-option value="PE">PE</a-select-option>
+            <a-select-option value="PM">PM</a-select-option>
+            <a-select-option value="AL">AL</a-select-option>
+            <a-select-option value="PGA">PGA</a-select-option>
+            <a-select-option value="FIN">FIN</a-select-option>
+            <a-select-option value="PUR">PUR</a-select-option>
+            <a-select-option value="KAI">KAI</a-select-option>
+            <a-select-option value="PC">PC</a-select-option>
+            <a-select-option value="QC">QC</a-select-option>
+          </a-select>
+        </a-form-item>
+
+        <a-form-item
           label="Password"
           name="password"
           :rules="[{ required: true, message: 'Please input your password!' }]"
         >
-          <a-input-password
-            v-model:value="form.password"
-            placeholder="Password"
-          />
+          <a-input-password v-model:value="form.password" placeholder="Password" />
         </a-form-item>
 
         <a-form-item
@@ -49,10 +64,7 @@
           name="retype_password"
           :rules="[{ required: true, message: 'Please retype your password!' }]"
         >
-          <a-input-password
-            v-model:value="form.retype_password"
-            placeholder="Password"
-          />
+          <a-input-password v-model:value="form.retype_password" placeholder="Password" />
         </a-form-item>
 
         <a-form-item>
@@ -60,11 +72,7 @@
             type="primary"
             html-type="submit"
             block
-            :disabled="
-              form.email === '' ||
-              form.password === '' ||
-              form.retype_password === ''
-            "
+            :disabled="form.email === '' || form.password === '' || form.retype_password === '' || form.dept === ''"
           >
             Register
           </a-button>
@@ -91,6 +99,7 @@ import TranslateGoogle from '@/components/TranslateGoogle.vue'
 const form = ref({
   username: '',
   email: '',
+  dept: '',
   password: '',
   retype_password: '',
 })
@@ -110,12 +119,11 @@ const handleRegister = async () => {
       errorMessage.value = 'password and retype password do not match'
       return
     }
-    await axios.post(
-      import.meta.env.VITE_API_BASE_URL + '/users/signup'
-      , {
+    await axios.post(import.meta.env.VITE_API_BASE_URL + '/users/signup', {
       username: form.value.username,
       email: form.value.email,
       password: form.value.password,
+      dept: form.value.dept,
     })
     openNotification('topRight')
     setTimeout(() => {
@@ -131,7 +139,7 @@ const handleRegister = async () => {
   }
 }
 
-const openNotification = placement => {
+const openNotification = (placement) => {
   notification.open({
     message: `Register Success`,
     description: `Wait a seconds it won't take long to direct you to the login page`,
