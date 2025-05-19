@@ -9,6 +9,7 @@ export const useAuthStore = defineStore('auth', {
     user: JSON.parse(localStorage.getItem('user')) || null,
     isAuthenticated: !!localStorage.getItem('isLoggedIn'),
     accessToken: !!localStorage.getItem('accessToken'),
+    cooldownForgotPassword: null,
   }),
 
   actions: {
@@ -98,4 +99,9 @@ export const useAuthStore = defineStore('auth', {
       this.isAuthenticated = value
     },
   },
+
+  persist: {
+    paths: ['cooldownForgotPassword'],
+    storage: localStorage
+  }
 })
