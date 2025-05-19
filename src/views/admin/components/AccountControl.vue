@@ -13,7 +13,7 @@
         </a-space>
         <a-space direction="vertical" :size="0">
           <span class="bold">Department</span>
-          <a-select size="small" v-model:value="selectedDept" class="select-option">
+          <a-select v-model:value="selectedDept" class="select-option">
             <a-select-option value="ALL">ALL</a-select-option>
             <a-select-option value="PE">PE</a-select-option>
             <a-select-option value="PM">PM</a-select-option>
