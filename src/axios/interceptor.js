@@ -53,7 +53,7 @@ api.interceptors.response.use(
         )
 
         // Ambil token baru dari respons refresh
-        const newAccessToken = res.data.data.access_token
+        const newAccessToken = res.data.access_token
 
         // Update access token di header authorization
         api.defaults.headers.common['Authorization'] =
