@@ -12,26 +12,17 @@
         <a-dropdown>
           <a-button type="primary" class="button-room large bold" shape="round">{{
             roomData?.room_name
-          }}</a-button>
+            }}</a-button>
           <template #overlay>
             <a-menu>
-              <a-menu-item
-                v-for="room in roomStore.rooms"
-                :key="room.id_room"
-                @click="handleChangeRoom(room.id_room)"
-              >
+              <a-menu-item v-for="room in roomStore.rooms" :key="room.id_room" @click="handleChangeRoom(room.id_room)">
                 {{ room?.room_name }}
               </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
         <a-tooltip title="See Schedule">
-          <a-button
-            type="primary"
-            shape="circle"
-            class="button-schedule large"
-            @click="goToScheduleInfo"
-          >
+          <a-button type="primary" shape="circle" class="button-schedule large" @click="goToScheduleInfo">
             <ScheduleOutlined />
           </a-button>
         </a-tooltip>
@@ -47,15 +38,14 @@
           </a-statistic>
         </a-col>
         <a-col :span="4">
-          <a-statistic
-            :value="Number(roomData?.capacity).toLocaleString('id-ID')"
-            :value-style="{ fontSize: '16px' }"
-          >
+          <a-statistic :value="Number(roomData?.capacity).toLocaleString('id-ID')" :value-style="{ fontSize: '16px' }">
             <template #title>
               <span class="bold large"> Capacity </span>
             </template>
             <template #prefix>
-              <span class="bold large"><UserOutlined /></span>
+              <span class="bold large">
+                <UserOutlined />
+              </span>
             </template>
           </a-statistic>
         </a-col>
@@ -64,10 +54,8 @@
       <!-- Ongoing and Upcoming -->
       <a-row :gutter="[16, 16]" :wrap="true">
         <a-col :span="24" class="ongoing-upcoming">
-          <a-statistic
-            :value="capitalizeEachWord(ongoing?.meeting_name || 'No Schedule')"
-            :value-style="{ fontSize: '16px' }"
-          >
+          <a-statistic :value="capitalizeEachWord(ongoing?.meeting_name || 'No Schedule')"
+            :value-style="{ fontSize: '16px' }">
             <template #title>
               <span class="bold large"> Ongoing </span>
             </template>
@@ -79,15 +67,15 @@
           </a-statistic>
         </a-col>
         <a-col :span="24" class="ongoing-upcoming">
-          <a-statistic
-            :value="capitalizeEachWord(upcoming?.meeting_name || 'No Schedule')"
-            :value-style="{ fontSize: '16px' }"
-          >
+          <a-statistic :value="capitalizeEachWord(upcoming?.meeting_name || 'No Schedule')"
+            :value-style="{ fontSize: '16px' }">
             <template #title>
               <span class="bold large"> Upcoming </span>
             </template>
             <template #prefix>
-              <span class="bold large"> <ReconciliationOutlined /></span>
+              <span class="bold large">
+                <ReconciliationOutlined />
+              </span>
             </template>
           </a-statistic>
         </a-col>
@@ -95,35 +83,21 @@
 
       <!-- Action Button -->
       <a-flex justify="center" gap="small" class="mt">
-        <a-button
-          type="primary"
-          size="large"
-          class="action-button"
-          :disabled="!ongoing"
-          v-if="!ongoing?.status"
-          @click="updateStatusBookings('Present')"
-        >
-          <span class="bold"><CheckCircleOutlined /> Present</span>
+        <a-button type="primary" size="large" class="action-button" :disabled="!ongoing" v-if="!ongoing?.status"
+          @click="handleConfirmation(ongoing, 'Present')">
+          <span class="bold">
+            <CheckCircleOutlined /> Present
+          </span>
         </a-button>
-        <a-button
-          type="primary"
-          danger
-          size="large"
-          class="action-button"
-          :disabled="!ongoing"
-          v-if="!ongoing?.status"
-          @click="updateStatusBookings('Cancel')"
-        >
-          <span class="bold"><CloseCircleOutlined /> Cancel</span>
+        <a-button type="primary" danger size="large" class="action-button" :disabled="!ongoing" v-if="!ongoing?.status"
+          @click="handleConfirmation(ongoing, 'Cancel')">
+          <span class="bold">
+            <CloseCircleOutlined /> Cancel
+          </span>
         </a-button>
-        <a-button
-          block
-          size="large"
-          type="primary"
-          class="ongoing-button green"
-          v-if="ongoing?.status === 'Present'"
-          >Meeting is ongoing</a-button
-        >
+        <a-button block size="large" type="primary" class="ongoing-button green"
+          v-if="ongoing?.status === 'Present'">Meeting
+          is ongoing</a-button>
       </a-flex>
 
       <!-- Date Time -->
@@ -132,6 +106,15 @@
       </a-flex>
     </a-space>
   </a-card>
+
+  <Teleport to="body">
+    <BaseModal :visible="modalData.visible" :modal-title="modalData.title" @close="handleClose">
+      <template #body>
+        <ModalConfirmation :data="modalData.data" :mode="modalData.mode" @close="handleClose"
+          @present="updateStatusBookings('Present')" @cancel="updateStatusBookings('Cancel')" />
+      </template>
+    </BaseModal>
+  </Teleport>
 </template>
 
 <script setup>
@@ -146,6 +129,8 @@ import {
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+import BaseModal from '@/components/BaseModal.vue'
+import ModalConfirmation from './ModalConfirmation.vue'
 import { useRoomStore } from '@/stores/room'
 import { useBookingStore } from '@/stores/bookings'
 import { useRoute, useRouter } from 'vue-router'
@@ -162,6 +147,31 @@ const route = useRoute()
 const roomData = ref()
 const ongoing = ref()
 const upcoming = ref()
+
+const modalData = ref({
+  visible: false,
+  data: null,
+  mode: null,
+  title: ''
+})
+
+
+const openModal = ({ title, data = null, mode }) => {
+  modalData.value = {
+    visible: true,
+    title,
+    data,
+    mode,
+  }
+}
+
+const handleConfirmation = (item, status = null) => {
+  openModal({ title: 'Confirmation Bookings', data: item, mode: status })
+}
+
+const handleClose = (isVisible) => {
+  modalData.value.visible = isVisible
+}
 
 const handleChangeRoom = (roomId) => {
   router.push(`/queue/${roomId}`)
