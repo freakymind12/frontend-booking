@@ -34,6 +34,7 @@ export const useBookingStore = defineStore("bookings", {
         if (response.status === 200) {
           message.success('Booking created successfully')
         }
+        return response
       } catch (error) {
         console.error('Failed to create booking:', error)
         return error.response.data
@@ -46,6 +47,7 @@ export const useBookingStore = defineStore("bookings", {
         if (response.status === 200) {
           message.success('Booking updated successfully')
         }
+        return response
       } catch (error) {
         console.error('Failed to update booking:', error)
         return error.response.data
