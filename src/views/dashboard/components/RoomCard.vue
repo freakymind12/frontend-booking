@@ -16,7 +16,7 @@
             :class="{ active: isBookingActive(book.start, book.end) }"
           >
             <a-flex vertical :gap="1">
-              <span><UserOutlined /> {{ book.username }}</span>
+              <span><UserOutlined /> {{ capitalizeEachWord(book.username) }}</span>
               <span
                 ><ClockCircleOutlined /> {{ book.start.split(' ')[1].slice(0, 5) }} -
                 {{ book.end.split(' ')[1].slice(0, 5) }}</span

@@ -5,7 +5,7 @@
         }}</span> this booking ? </span>
     <a-card size="small" class="card-booking" :hoverable="true">
       <a-space direction="vertical" :size="2">
-        <span class="medium"><user-outlined /> {{ data.username }}</span>
+        <span class="medium"><user-outlined /> {{ capitalizeEachWord(data.username) }}</span>
         <span class="medium"><reconciliation-outlined /> {{ capitalizeEachWord(data.meeting_name) }}</span>
         <span class="medium"><clock-circle-outlined /> {{ data.start.split(" ")[1].slice(0, 5) }} - {{ data.end.split(" ")[1].slice(0,5) }} </span>
       </a-space>

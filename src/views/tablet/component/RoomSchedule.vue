@@ -14,7 +14,7 @@
         >
           <a-flex vertical :gap="2">
             <a-flex justify="space-between" align="center">
-              <span class="bold"><UserOutlined /> {{ data.username }} </span>
+              <span class="bold"><UserOutlined /> {{ capitalizeEachWord(data.username) }} </span>
               <span class="bold"><UsergroupAddOutlined /> {{ data.dept }}</span>
             </a-flex>
             <span><ReconciliationOutlined /> {{ capitalizeEachWord(data.meeting_name) }}</span>
