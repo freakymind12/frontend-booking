@@ -1,13 +1,13 @@
 <template>
   <a-flex vertical :gap="10">
-    <span>Are you sure want to confirm <span class="bold" :class="mode == 'Present' ? 'green' : 'red'">{{ mode
-    }}</span> this booking ? </span>
-    <a-card size="small" style="width: 100%;">
+    <span class="large">Are you sure want to confirm <span class="bold" :class="mode == 'Present' ? 'green' : 'red'">{{
+      mode
+        }}</span> this booking ? </span>
+    <a-card size="small" class="card-booking" :hoverable="true">
       <a-space direction="vertical" :size="2">
-        <span><user-outlined /> {{ data.username }}</span>
-        <span><reconciliation-outlined /> {{ capitalizeEachWord(data.meeting_name) }}</span>
-        <span><clock-circle-outlined /> {{ data.start.split(" ")[1].slice(0, 5) }} - {{ data.end.split(" ")[1].slice(0,
-          5) }} </span>
+        <span class="medium"><user-outlined /> {{ data.username }}</span>
+        <span class="medium"><reconciliation-outlined /> {{ capitalizeEachWord(data.meeting_name) }}</span>
+        <span class="medium"><clock-circle-outlined /> {{ data.start.split(" ")[1].slice(0, 5) }} - {{ data.end.split(" ")[1].slice(0,5) }} </span>
       </a-space>
     </a-card>
     <a-flex justify="flex-end" gap="small">
@@ -39,10 +39,10 @@ const props = defineProps({
 })
 
 const handleSubmit = () => {
-  if(props.mode == 'Present') {
+  if (props.mode == 'Present') {
     emit('present')
   }
-  if(props.mode == 'Cancel'){
+  if (props.mode == 'Cancel') {
     emit('cancel')
   }
 
@@ -63,5 +63,18 @@ const handleSubmit = () => {
 .red {
   font-style: italic;
   color: rgba(211, 13, 13, 0.815)
+}
+
+.card-booking {
+  border: 2px solid #264D8E;
+  margin-bottom: 1rem;
+}
+
+.card-booking:hover {
+  background-color: #d6d6d61f;
+}
+
+.medium {
+  font-size: 16px;
 }
 </style>
