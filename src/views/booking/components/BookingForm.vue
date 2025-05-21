@@ -1,46 +1,22 @@
 <template>
   <a-form layout="vertical" :model="formState" @finish="handleAction(props.mode)">
-    <a-form-item
-      label="Room"
-      name="id_room"
-      :rules="[{ required: true, message: 'Please select room', trigger: 'change' }]"
-    >
-      <a-select
-        class="select-option"
-        v-model:value="formState.id_room"
-        :options="roomStore.getRoomOptions"
-        :disabled="props.mode === 'delete'"
-      />
+    <a-form-item label="Room" name="id_room"
+      :rules="[{ required: true, message: 'Please select room', trigger: 'change' }]">
+      <a-select class="select-option" v-model:value="formState.id_room" :options="roomStore.getRoomOptions"
+        :disabled="props.mode === 'delete'" />
     </a-form-item>
-    <a-form-item
-      label="Meeting Name"
-      name="meeting_name"
-      :rules="[{ required: true, message: 'Please input meeting name', trigger: 'change' }]"
-    >
-      <a-textarea
-        v-model:value="formState.meeting_name"
-        :showCount="true"
-        :maxLength="100"
-        :disabled="props.mode === 'delete'"
-      />
+    <a-form-item label="Meeting Name" name="meeting_name"
+      :rules="[{ required: true, message: 'Please input meeting name', trigger: 'change' }]">
+      <a-textarea v-model:value="formState.meeting_name" :showCount="true" :maxLength="100"
+        :disabled="props.mode === 'delete'" />
     </a-form-item>
-    <a-form-item
-      label="Start & End Time"
-      name="date_range"
-      :rules="[
-        { required: true, message: 'Please select start and end time', trigger: 'change' },
-        { validator: validateSameDay, trigger: 'change' },
-      ]"
-    >
-      <a-range-picker
-        :show-time="{ format: 'HH:mm' }"
-        format="YYYY-MM-DD HH:mm"
-        :placeholder="['Start Time', 'End Time']"
-        v-model:value="formState.date_range"
-        class="range-picker"
-        :allowClear="false"
-        :disabled-date="disabledDate"
-      />
+    <a-form-item label="Start & End Time" name="date_range" :rules="[
+      { required: true, message: 'Please select start and end time', trigger: 'change' },
+      { validator: validateSameDay, trigger: 'change' },
+    ]">
+      <a-range-picker :show-time="{ format: 'HH:mm' }" format="YYYY-MM-DD HH:mm"
+        :placeholder="['Start Time', 'End Time']" v-model:value="formState.date_range" class="range-picker"
+        :allowClear="false" :disabled-date="disabledDate" />
     </a-form-item>
 
     <transition name="fade-slide" appear>
@@ -49,9 +25,7 @@
 
     <a-flex justify="flex-end" gap="small">
       <a-button type="default" @click="emit('close')">Close</a-button>
-      <a-button type="primary" :danger="props.mode === 'delete'" html-type="submit"
-        >Submit</a-button
-      >
+      <a-button type="primary" :danger="props.mode === 'delete'" html-type="submit">Submit</a-button>
     </a-flex>
   </a-form>
 </template>
@@ -161,10 +135,10 @@ const validateSameDay = (_, value) => {
 // disabled date range sebelum today dan setelah + 1 minggu dari today
 const disabledDate = (current) => {
   const now = dayjs()
-  const oneWeekLater = now.add(7, 'day')
+  const duration = now.add(14, 'day')
 
   // Disable jika tanggal current sebelum sekarang (hari ini) atau setelah 7 hari dari sekarang
-  return current.isBefore(now, 'day') || current.isAfter(oneWeekLater, 'day')
+  return current.isBefore(now, 'day') || current.isAfter(duration, 'day')
 }
 
 watch(
@@ -191,21 +165,26 @@ watch(
 .fade-slide-enter-active {
   transition: all 0.3s ease;
 }
+
 .fade-slide-leave-active {
   transition: all 0.3s ease;
 }
+
 .fade-slide-enter-from {
   opacity: 0;
   transform: translateY(-10px);
 }
+
 .fade-slide-enter-to {
   opacity: 1;
   transform: translateY(0);
 }
+
 .fade-slide-leave-from {
   opacity: 1;
   transform: translateY(0);
 }
+
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
