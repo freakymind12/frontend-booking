@@ -207,7 +207,7 @@ const updateOngoingandUpcoming = () => {
 }
 
 const updateStatusBookings = async (status) => {
-  await bookingStore.update(ongoing.value.id_booking, { ...ongoing.value, status })
+  await bookingStore.update(ongoing.value.id_booking, { ...ongoing.value, status, confirmation: true })
   await bookingStore.get({
     id_room: route.params.id_room,
     date: dayjs().format('YYYY-MM-DD'),
