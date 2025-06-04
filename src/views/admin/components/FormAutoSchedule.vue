@@ -1,85 +1,44 @@
 <template>
   <a-form layout="vertical" :model="formState" @finish="handleAction(props.mode)">
-    <a-form-item
-      label="Meeting Name"
-      name="meeting_name"
-      :rules="[{ required: true, message: 'Please input meeting name', trigger: 'change' }]"
-    >
+    <a-form-item label="Meeting Name" name="meeting_name"
+      :rules="[{ required: true, message: 'Please input meeting name', trigger: 'change' }]">
       <a-input v-model:value="formState.meeting_name" :disabled="props.mode === 'delete'" />
     </a-form-item>
-    <a-form-item
-      label="Room"
-      name="id_room"
-      :rules="[
-        { required: true, message: 'Please select room', trigger: 'change' },
-        { validator: validateConflict, trigger: 'change' },
-      ]"
-    >
-      <a-select
-        class="select-option"
-        v-model:value="formState.id_room"
-        :options="roomStore.getRoomOptions"
-        :disabled="props.mode === 'delete'"
-      />
+    <a-form-item label="Room" name="id_room" :rules="[
+      { required: true, message: 'Please select room', trigger: 'change' },
+      { validator: validateConflict, trigger: 'change' },
+    ]">
+      <a-select class="select-option" v-model:value="formState.id_room" :options="roomStore.getRoomOptions"
+        :disabled="props.mode === 'delete'" />
     </a-form-item>
-    <a-form-item
-      label="PIC Meeting"
-      name="id_user"
-      :rules="[{ required: true, message: 'Please select PIC meeting', trigger: 'change' }]"
-    >
-      <a-select
-        class="select-option"
-        show-search
-        :filter-option="filterOption"
-        v-model:value="formState.id_user"
-        :options="userStore.getUserOptions"
-        :disabled="props.mode === 'delete'"
-      />
+    <a-form-item label="PIC Meeting" name="id_user"
+      :rules="[{ required: true, message: 'Please select PIC meeting', trigger: 'change' }]">
+      <a-select class="select-option" show-search :filter-option="filterOption" v-model:value="formState.id_user"
+        :options="userStore.getUserOptions" :disabled="props.mode === 'delete'" />
     </a-form-item>
     <a-row :gutter="[8, 8]">
       <a-col :span="12">
-        <a-form-item
-          label="Day"
-          name="day"
-          :rules="[
-            { required: true, message: 'Please select day', trigger: 'change' },
-            { validator: validateConflict, trigger: 'change' },
-          ]"
-        >
-          <a-select
-            class="select-option"
-            v-model:value="formState.day"
-            :options="daysOfWeek"
-            :disabled="props.mode === 'delete'"
-          />
+        <a-form-item label="Day" name="day" :rules="[
+          { required: true, message: 'Please select day', trigger: 'change' },
+          { validator: validateConflict, trigger: 'change' },
+        ]">
+          <a-select class="select-option" v-model:value="formState.day" :options="daysOfWeek"
+            :disabled="props.mode === 'delete'" />
         </a-form-item>
       </a-col>
       <a-col :span="12">
-        <a-form-item
-          label="Time Range"
-          name="time_range"
-          :rules="[
-            { required: true, message: 'Please input time range', trigger: 'change' },
-            { validator: validateConflict, trigger: 'change' },
-          ]"
-        >
-          <a-time-range-picker
-            v-model:value="formState.time_range"
-            format="HH:mm"
-            class="select-option"
-            :allowClear="false"
-            :placeholder="['', '']"
-            :disabled="props.mode === 'delete'"
-          />
+        <a-form-item label="Time Range" name="time_range" :rules="[
+          { required: true, message: 'Please input time range', trigger: 'change' },
+          { validator: validateConflict, trigger: 'change' },
+        ]">
+          <a-time-range-picker v-model:value="formState.time_range" format="HH:mm" class="select-option"
+            :allowClear="false" :placeholder="['', '']" :disabled="props.mode === 'delete'" />
         </a-form-item>
       </a-col>
-      <a-col :span="8"></a-col>
     </a-row>
     <a-flex justify="flex-end" gap="small">
       <a-button type="default" @click="emit('close')">Close</a-button>
-      <a-button type="primary" :danger="props.mode === 'delete'" html-type="submit"
-        >Submit</a-button
-      >
+      <a-button type="primary" :danger="props.mode === 'delete'" html-type="submit">Submit</a-button>
     </a-flex>
   </a-form>
 </template>
@@ -100,7 +59,7 @@ const emit = defineEmits(['close'])
 const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
   const dayValue = (i + 1) % 7 // Geser agar Monday = 1, Sunday = 0
   return {
-    value: dayValue,
+    value: dayjs().day(dayValue).format('dddd'),
     label: dayjs().day(dayValue).format('dddd'),
   }
 })
@@ -143,7 +102,6 @@ const handleAction = async (mode) => {
     const { time_range, ...payload } = formState.value
     const start = dayjs(time_range[0]).format('HH:mm')
     const end = dayjs(time_range[1]).format('HH:mm')
-    console.log(start, end)
     await autoScheduleStore.create({
       ...payload,
       start,
@@ -173,15 +131,13 @@ const validateConflict = async () => {
   if (props.mode === 'delete') return Promise.resolve()
 
   const { day, time_range, id_room } = formState.value
-
-  if (!day || !id_room || !time_range || time_range.length !== 2) return Promise.resolve()
+  const { id_schedule } = props.data
 
   const start = time_range[0]?.format('HH:mm')
   const end = time_range[1]?.format('HH:mm')
 
-  if (!start || !end) return Promise.resolve()
-
-  const conflicted = autoScheduleStore.getConflictedSchedules(day, start, end, id_room)
+  const conflicted = autoScheduleStore.getConflictedSchedules(day, start, end, id_room, id_schedule)
+  console.log(conflicted)
 
   if (conflicted.length > 0) {
     return Promise.reject(new Error('Schedule conflict with existing data'))

@@ -18,7 +18,7 @@
                 <a-card size="small" :hoverable="true">
                   <a-flex vertical :gap="2">
                     <a-flex justify="space-between">
-                      <span class="bold"><UserOutlined /> {{ schedule.username }}</span>
+                      <span class="bold"><UserOutlined /> {{ capitalizeEachWord(schedule.username) }}</span>
                       <a-space :size="0">
                         <a-tag class="bold"
                           ><ClockCircleOutlined /> {{ schedule.start.slice(0, 5) }} -
@@ -28,7 +28,7 @@
                       </a-space>
                     </a-flex>
                     <span><HomeOutlined /> {{ schedule.room_name }}</span>
-                    <span><ReconciliationOutlined /> {{ schedule.meeting_name }}</span>
+                    <span><ReconciliationOutlined /> {{ capitalizeEachWord(schedule.meeting_name) }}</span>
                   </a-flex>
                 </a-card>
                 <template #overlay>
@@ -76,6 +76,7 @@ import {
 } from '@ant-design/icons-vue'
 import { onMounted, ref } from 'vue'
 import dayjs from 'dayjs'
+import { capitalizeEachWord } from '@/utils/capitalizeEachWord'
 
 const autoScheduleStore = useAutoScheduleStore()
 

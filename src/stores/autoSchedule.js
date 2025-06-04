@@ -64,8 +64,11 @@ export const useAutoScheduleStore = defineStore("autoSchedule", {
       }
     },
     getConflictedSchedules: (state) => {
-      return (day, start, end, id_room) => {
+      return (day, start, end, id_room, id_schedule) => {
         return state.schedules.filter(schedule => {
+          // hanya untuk id_schedule yang sama
+          if (id_schedule && schedule.id_schedule === id_schedule) return false;
+
           // Hanya untuk day yang sama
           if (schedule.day !== day) return false;
 
