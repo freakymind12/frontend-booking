@@ -52,9 +52,20 @@
         <a-tooltip title="Forgot Password">
           <LockOutlined @click="router.push('/forgot-password')" class="bold large icon-login" />
         </a-tooltip>
+        <a-tooltip title="User Guide">
+          <QuestionCircleOutlined @click="openModal({ title: 'User Guide', data: null, mode: null })"
+            class="bold large icon-login" />
+        </a-tooltip>
       </a-flex>
     </a-card>
   </a-flex>
+  <Teleport to="body">
+    <BaseModal width="1200px" :visible="modalData.visible" :modal-title="modalData.title" @close="handleClose">
+      <template #body>
+        <iframe src="/user-guide.pdf" width="100%" height="650px" title="User Guide" />
+      </template>
+    </BaseModal>
+  </Teleport>
 </template>
 
 <script setup>
@@ -64,7 +75,8 @@ import TranslateGoogle from '@/components/TranslateGoogle.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useRoomStore } from '@/stores/room'
-import { TabletOutlined, UserAddOutlined, LockOutlined } from '@ant-design/icons-vue'
+import { TabletOutlined, UserAddOutlined, LockOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue'
+import BaseModal from '@/components/BaseModal.vue'
 
 const roomStore = useRoomStore()
 const router = useRouter()
@@ -73,6 +85,26 @@ const form = ref({
   email: '',
   password: '',
 })
+
+const modalData = ref({
+  visible: false,
+  mode: null,
+  data: null,
+  title: '',
+})
+
+const openModal = ({ title, data = null, mode }) => {
+  modalData.value = {
+    visible: true,
+    title,
+    data,
+    mode,
+  }
+}
+
+const handleClose = (isVisible) => {
+  modalData.value.visible = isVisible
+}
 
 // Variable untuk mengatur status animasi
 const isActive = ref(false)
