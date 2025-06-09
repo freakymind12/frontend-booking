@@ -1,0 +1,16 @@
+services:
+  fe-rdz-th:
+    image: node:20
+    container_name: fe-booking
+    restart: always
+    working_dir: /app
+    ports:
+      - '4173:4173'
+    volumes:
+      - .:/app
+      - .env:/app/.env
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Jakarta # Set timezone container
+    command: sh -c "npm install && npm run build && npm run preview -- --host 0.0.0.0"
