@@ -14,7 +14,7 @@
 ### Clone Repository
 
 ```bash
-git clone https://github.com/freakymind12/frontend-booking.git
+git clone https://github.com/HRSID-Development/fe-meeting-room.git
 cd frontend-booking
 ```
 
